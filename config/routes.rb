@@ -13,5 +13,13 @@ Rails.application.routes.draw do
     get 'reset_password', to: 'users/passwords#edit'
   end
 
+  resources :messages do
+    collection do
+      get :inbound
+      get :delivery
+      get :status
+    end
+  end
+
   root to: 'application#home'
 end
