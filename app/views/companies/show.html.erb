@@ -1,0 +1,36 @@
+<% if @company.reservations.empty? %>
+  <h5 style="text-align: center; margin: 20px;">
+    You don't have any reservations for today !
+  </h5>
+<% else %>
+  <% @company.reservations.group_by {|reservation| reservation.created_at.to_date }.each do |date, reservations| %>
+    <h5 style="margin: 20px;">
+      <%= date %>
+    </h5>
+    <table class="table" style="margin-top: 20px;">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Phone number</th>
+          <th scope="col">Starting time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% reservations.each_with_index do |reservation, index| %>
+          <tr>
+            <th scope="row">
+              <%= index + 1 %>
+            </th>
+            <td>
+              <%= "**** *** #{reservation.phone_number.chars.last(3).join}" %>
+            </td>
+            <td>
+              <%= reservation.reservation_date.strftime('%H:%M') %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
+<%= link_to 'Edit company', edit_company_path(@company), class: "btn btn-primary" %>
