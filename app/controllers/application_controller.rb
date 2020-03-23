@@ -3,9 +3,22 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :authenticate_user!
 
-  def home; end
+  def home
+    if current_user
+      signed_in
+    else
+      render 'home', layout: 'home'
+    end
+  end
+
+  def signed_in
+    unless current_user.companies.empty?
+      redirect_to company_path(current_user.companies.first)
+    else
+      redirect_to new_company_path
+    end
+  end
 
   protected
 

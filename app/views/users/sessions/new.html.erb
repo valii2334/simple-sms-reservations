@@ -1,28 +1,23 @@
-<h2 class="text-center m-5">Log in</h2>
-
-<div class="col-8 offset-2 col-sm-6 offset-sm-3">
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <div class="field">
-      <%= f.label :email %><br />
-      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control m-2' %>
-    </div>
-
-    <div class="field">
-      <%= f.label :password %><br />
-      <%= f.password_field :password, autocomplete: "current-password", class: 'form-control m-2' %>
-    </div>
-
-    <% if devise_mapping.rememberable? %>
-      <div class="field">
-        <%= f.check_box :remember_me, class: 'm-2' %>
-        <%= f.label :remember_me %>
-      </div>
-    <% end %>
-
-    <div class="actions">
-      <%= f.submit "Log in", class: 'btn btn-primary m-2' %>
-    </div>
-  <% end %>
-  <hr>
-  <%= render "users/shared/links" %>
+<div class="text-center">
+  <h1 class="h4 text-gray-900 mb-4">Sign In</h1>
 </div>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'user' }) do |f| %>
+  <div class="form-group">
+    <%= render "devise/shared/error_messages", resource: resource %>
+  </div>
+  <div class="form-group">
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control form-control-user', placeholder: "Enter Email Address..."%>
+  </div>
+  <div class="form-group">
+    <%= f.password_field :password, autocomplete: "current-password", class: 'form-control form-control-user', placeholder: "Password" %>
+  </div>
+  <div class="form-group">
+    <div class="custom-control custom-checkbox small">
+      <%= f.check_box :remember_me, class: 'custom-control-input' %>
+      <label class="custom-control-label" for="user_remember_me">Remember Me</label>
+    </div>
+  </div>
+  <%= f.submit "Sign In", class: 'btn btn-primary btn-user btn-block' %>
+  <hr>
+<% end %>
+<%= render "users/shared/links" %>

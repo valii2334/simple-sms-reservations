@@ -1,0 +1,47 @@
+<% time_slot_integer      = time_slot.to_i %>
+<% time_slot_hour_min     = time_slot.strftime('%H:%M') %>
+<% reservations_made      = ( @reservations[time_slot_hour_min] || [] ) %>
+<% reservations_available = @company.customers_per_unit_of_time - reservations_made.count %>
+
+<div class="card" style="margin-top: 5px;">
+  <div class="card-header" id="heading-1-<%= time_slot_integer %>">
+    <h6 class="mb-0">
+      <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-1-<%= time_slot_integer %>" aria-expanded="false" aria-controls="collapse-1-<%= time_slot_integer %>" style="text-decoration: none;">
+        <%= time_slot_hour_min %> - <%= (time_slot + @company.unit_of_time.minutes).strftime('%H:%M') %> (<%= reservations_made.count %> reservations made, <%= reservations_available %> spots available  )
+      </a>
+      <% if (time_slot > DateTime.current) && reservations_available.positive? %>
+        <a href="#" data-toggle="modal" data-target="#add_reservation_<%= time_slot_integer %>" class="btn btn-sm btn-outline-success" style="text-align: right; float: right;">
+          Add reservation
+        </a>
+        <%= render partial: 'companies/partials/add_reservation', locals: { time_slot: time_slot, time_slot_integer: time_slot_integer } %>
+      <% end %>
+    </h6>
+  </div>
+
+  <div id="collapse-1-<%= time_slot_integer %>" class="collapse" data-parent="#accordion-1" aria-labelledby="heading-1-<%= time_slot_integer %>">
+    <div class="card-body" style="padding: 0px;">
+
+      <table class="table table-striped" style="margin-bottom: 0px;">
+        <tbody>
+          <% reservations_made.each_with_index do |reservation, index| %>
+            <tr>
+              <td style="text-align: left;">
+                <%=  Phonelib.parse(reservation.phone_number) %>
+              </td>
+              <td style="text-align: center;">
+                <%= reservation.details %>
+              </td>
+              <td style="text-align: right;">
+                <a href="#" data-toggle="modal" data-target="#cancel_reservation_<%= reservation.id %>" class="btn btn-sm btn-outline-danger">
+                  Cancel
+                </a>
+              </td>
+              <%= render partial: 'companies/partials/cancel_reservation', locals: { reservation: reservation } %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

@@ -14,3 +14,9 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
+Rails.application.config.assets.precompile += %w( landing-page.min.css )
+Rails.application.config.assets.precompile += %w( vendor/bootstrap/css/bootstrap.min.css )
+Rails.application.config.assets.precompile += %w( vendor/fontawesome-free/css/all.min.css )
+Rails.application.config.assets.precompile += %w( vendor/simple-line-icons/css/simple-line-icons.css )
+Rails.application.config.assets.precompile += %w( vendor/jquery/jquery.min.js )
+Rails.application.config.assets.precompile += %w( vendor/bootstrap/js/bootstrap.bundle.min.js )

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Users::SessionsController < Devise::SessionsController
+  layout 'devise'
   # before_action :configure_sign_in_params, only: [:create]
 
   # GET /resource/sign_in
@@ -25,6 +26,10 @@ class Users::SessionsController < Devise::SessionsController
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
   def after_sign_in_path_for(_resource)
-    root_path
+    unless current_user.companies.empty?
+      company_path(current_user.companies.first)
+    else
+      new_company_path
+    end
   end
 end

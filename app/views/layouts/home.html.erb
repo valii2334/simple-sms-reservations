@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= stylesheet_link_tag 'landing-page.min', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'vendor/bootstrap/css/bootstrap.min.css', media: "all" %>
+
+  <%= stylesheet_link_tag 'vendor/fontawesome-free/css/all.min.css', media: "all" %>
+  <%= stylesheet_link_tag 'vendor/simple-line-icons/css/simple-line-icons.css', media: "all" %>
+
+  <meta property='title' content='Simple SMS Reservations'>
+  <meta property='description' content='Easiest SMS reservation system for your business!'>
+  <meta property='keywords' content='sms reservations, sms booking, sms reservation system, sms message'>
+
+  <meta property='og:type' content='website'>
+  <meta property='og:url' content='https://simplesmsreservations.com'>
+  <meta property='og:site_name' content='Simple SMS Reservations'>
+  <meta property='og:image' itemprop='image primaryImageOfPage' content="<%=asset_path('home/appointment.jpg')%>">
+
+  <title><%= t 'landing_page.title' %></title>
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#"><%= t 'landing_page.title' %></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="<%= new_user_session_path %>"><%= t 'landing_page.sign_in' %></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="<%= new_user_registration_path %>"><%= t 'landing_page.create_account' %></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Masthead -->
+  <header class="masthead text-white text-center" style="background: url(<%= asset_path( 'home/appointment.jpg' ) %>) no-repeat center center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h1 class="mb-5"><%= t 'landing_page.short_description' %></h1>
+        </div>
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+          <form>
+            <div class="form-row">
+              <div class="col-sm-4 offset-sm-4">
+                <a class="btn btn-primary btn-block btn-lg" href="<%= new_user_registration_path %>"><%= t 'landing_page.sign_up' %></a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Icons Grid -->
+
+  <section class="features-icons bg-light text-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="icon-screen-desktop m-auto text-primary"></i>
+            </div>
+            <h3><%= t 'landing_page.feature_1_title_short' %></h3>
+            <p class="lead mb-0"><%= t 'landing_page.feature_1_description_short' %></p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="icon-layers m-auto text-primary"></i>
+            </div>
+            <h3><%= t 'landing_page.feature_2_title_short' %></h3>
+            <p class="lead mb-0"><%= t 'landing_page.feature_2_description_short' %></p>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+            <div class="features-icons-icon d-flex">
+              <i class="icon-check m-auto text-primary"></i>
+            </div>
+            <h3><%= t 'landing_page.feature_3_title_short' %></h3>
+            <p class="lead mb-0"><%= t 'landing_page.feature_3_description_short' %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Image Showcases -->
+  <section class="showcase">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6 text-white showcase-img" style="background-image: url(<%= asset_path( 'home/sms_reservation.jpg' ) %>)"></div>
+        <div class="col-lg-6 my-auto showcase-text">
+          <h2><%= t 'landing_page.feature_4_title' %></h2>
+          <p class="lead mb-0"><%= t('landing_page.feature_4_international').html_safe %></p>
+          <p class="lead mb-0"><%= t('landing_page.feature_4_description').html_safe %></p>
+          <p class="lead mb-0"><%= t('landing_page.feature_4_romania').html_safe %></p>
+          <p class="lead mb-0"><%= t('landing_page.feature_4_description_2').html_safe %></p>
+        </div>
+      </div>
+      <div class="row">
+
+        <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url(<%= asset_path( 'home/dentist.jpg' ) %>)"></div>
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2><%= t 'landing_page.feature_1_title' %></h2>
+          <p class="lead mb-0"><%= t 'landing_page.feature_1_description' %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 text-white showcase-img" style="background-image: url(<%= asset_path( 'home/kindergarten.jpg' ) %>)"></div>
+        <div class="col-lg-6 my-auto showcase-text">
+          <h2><%= t 'landing_page.feature_2_title' %></h2>
+          <p class="lead mb-0"><%= t 'landing_page.feature_2_description' %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url(<%= asset_path( 'home/lawyer.jpg' ) %>)"></div>
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2><%= t 'landing_page.feature_3_title' %></h2>
+          <p class="lead mb-0"><%= t 'landing_page.feature_3_description' %></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12 order-lg-1 my-auto showcase-text">
+          <h2><%= t 'how_it_works.title' %></h2>
+          <p><%= t 'how_it_works.description' %></p>
+          <ol>
+            <li class="lead mb-0"><%= t('how_it_works.step_1_html') %></li>
+            <li class="lead mb-0"><%= t('how_it_works.step_2_html') %></li>
+            <li class="lead mb-0"><%= t 'how_it_works.step_3_html' %></li>
+            <li class="lead mb-0"><%= t 'how_it_works.step_4_html' %></li>
+            <li class="lead mb-0"><%= t 'how_it_works.step_5_html' %></li>
+            <li class="lead mb-0"><%= t 'how_it_works.step_6_html' %></li>
+            <li class="lead mb-0"><%= t 'how_it_works.example_html' %></li>
+          </ol>
+          <p><%= t 'how_it_works.help_html' %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials text-center bg-light">
+    <div class="container">
+      <h2 class="mb-5"><%= t 'landing_page.testimonials_title' %></h2>
+      <div class="row">
+        <div class="col-lg-4 offset-lg-4">
+          <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+            <img class="img-fluid rounded-circle mb-3" src="<%= asset_path( 'home/testimonials-4.png' ) %>" alt="">
+            <h5>Valentin Lazar</h5>
+            <p class="font-weight-light mb-0"><%= t 'landing_page.testimonials_customer_1' %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="call-to-action text-white text-center" style="background: url(<%= asset_path( 'home/bg-masthead.jpg' ) %>) no-repeat center center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h2 class="mb-4"><%= t 'landing_page.ready_to_get_started' %></h2>
+        </div>
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+          <form>
+            <div class="form-row">
+              <div class="col-sm-4 offset-sm-4">
+                <a class="btn btn-primary btn-block btn-lg" href="<%= new_user_registration_path %>"><%= t 'landing_page.sign_up' %></a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item">
+              <a href="#">About</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Contact</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Terms of Use</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Privacy Policy</a>
+            </li>
+          </ul>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Easy SMS Reservations. All Rights Reserved.</p>
+        </div>
+        <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item mr-3">
+              <a href="#">
+                <i class="fab fa-facebook fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item mr-3">
+              <a href="#">
+                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fab fa-instagram fa-2x fa-fw"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+
+  <%= javascript_include_tag "vendor/jquery/jquery.min.js" %>
+  <%= javascript_include_tag "vendor/bootstrap/js/bootstrap.bundle.min.js" %>
+
+</body>
+
+</html>

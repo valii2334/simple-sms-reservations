@@ -1,0 +1,309 @@
+<%= form_for @company do |f| %>
+  <%= render "devise/shared/error_messages", resource: @company %>
+
+  <div class="card">
+
+    <div class="card-header">
+      <b>Company details</b>
+    </div>
+
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
+            <label>Company Name</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.text_field :name, autofocus: true, class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
+            <label>Company unique identification code (no special characters, only letters and numbers)</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.text_field :code, class: 'form-control' %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top: 20px;">
+
+    <div class="card-header">
+      Reservation details
+    </div>
+
+    <div class="card-body">
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
+            <label>What is the date format customers must use when making a reservation?</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2 col-sm-12 col-xs-12">
+          <div class="field">
+            <%= f.select(:date_format, [[ 'DD/MM', 'DMY'], ['MM/DD', 'MDY'], ['YYYY/MM/DD', 'YMD']], {}, { class: 'form-control ' }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
+            <label>How long does a reservation take?</label>
+            <h6>If you select 15 minutes and your company is open between 09:00 and 10:00 you will have the following time slots: 09:00, 09:15, 09:30, 09:45</h6>
+            <h6 style="color: red;">After the first reservation is made this can not be changed!</h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2 col-sm-12 col-xs-12">
+          <div class="field">
+            <%= f.select(:unit_of_time, 5.step(120, 5).map{|minutes| [ "#{minutes} minutes", minutes] }, {}, { class: 'form-control ', disabled: @company.reservations.any? }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
+            <label>How many reservation can be made at the same time for each time slot?</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2 col-sm-12 col-xs-12">
+          <div class="field">
+            <%= f.select(:customers_per_unit_of_time, 1.upto(20).map{ |x| x }, {}, { class: 'form-control ' }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
+            <label>Successfully confirmed reservation message</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.text_field :reservation_message, class: 'form-control ' %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="card" style="margin-top: 20px;">
+
+    <div class="card-header">
+      <b>Schedule</b>
+    </div>
+
+    <div class="card-body">
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <label>Monday - Friday opening time</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.time_field(:opening_time, class: "form-control ") %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <label>Monday - Friday closing time</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.time_field(:closing_time, class: "form-control ") %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <label>Are you closed on Saturday?</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.select(:closed_saturday, [['Yes', true], ['No', false]], {}, { class: 'form-control ', onchange: "showHide('company_closed_saturday', 'saturday_schedule')" }) %>
+          </div>
+        </div>
+      </div>
+
+      <div id="saturday_schedule">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <label>When do you open on Saturday?</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <%= f.time_field(:opening_time_saturday, class: "form-control ") %>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <label>When do you close on Saturday?</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <%= f.time_field(:closing_time_saturday, class: "form-control ") %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <label>Are you closed on Sunday?</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.select(:closed_sunday, [['Yes', true], ['No', false]], {}, { class: 'form-control ', onchange: "showHide('company_closed_sunday', 'sunday_schedule')" }) %>
+          </div>
+        </div>
+      </div>
+
+      <div id="sunday_schedule">
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <label>When do you open on Sunday?</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <%= f.time_field(:opening_time_sunday, class: "form-control ") %>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <label>When do you close on Sunday?</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <div class="field">
+              <%= f.time_field(:closing_time_sunday, class: "form-control ") %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 20px;">
+    <div class="card-header">
+      <b>Closed</b>
+    </div>
+
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <label>Company is temporarily closed?</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <div class="field">
+            <%= f.select(:temporarily_closed, [['Yes', true], ['No', false]], {}, { class: 'form-control' }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Save", class: 'btn btn-primary btn-block', style: 'margin-top: 20px;' %>
+  </div>
+<% end %>
+
+<%= javascript_tag do %>
+  showHide('company_closed_saturday', 'saturday_schedule');
+  showHide('company_closed_sunday', 'sunday_schedule');
+
+  function showHide(selectObjectId, id) {
+    var selectedValue = document.getElementById(selectObjectId).value;
+    var weekendDaySchedule = document.getElementById(id);
+
+    if (selectedValue == 'true') {
+      weekendDaySchedule.style.display = "none";
+    } else {
+      weekendDaySchedule.style.display = "block";
+    }
+  }
+<% end %>
