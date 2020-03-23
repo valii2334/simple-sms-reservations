@@ -10,10 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_01_161649) do
+ActiveRecord::Schema.define(version: 2020_03_24_070233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.integer "unit_of_time"
+    t.integer "customers_per_unit_of_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.boolean "closed_saturday", default: false
+    t.boolean "closed_sunday", default: false
+    t.boolean "temporarily_closed", default: false
+    t.datetime "opening_time"
+    t.datetime "closing_time"
+    t.integer "user_id"
+    t.index ["code"], name: "index_companies_on_code", unique: true
+    t.index ["name"], name: "index_companies_on_name", unique: true
+  end
+
+  create_table "reservations", force: :cascade do |t|
+    t.string "phone_number"
+    t.integer "company_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "reservation_date"
+    t.index ["company_id", "phone_number", "reservation_date"], name: "reservation_unique_index", unique: true
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false

@@ -12,7 +12,7 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
+  <body style="background: asset-url('background.jpg')">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Programari Rapide</a>
@@ -21,6 +21,30 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <% unless current_user.nil? %>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Companies
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                <% if current_user.companies.empty? %>
+                  <%= link_to 'Create a new company', new_company_path, class: "dropdown-item" %>
+                <% else %>
+                  <% current_user.companies.each do |company| %>
+                    <%= link_to company.name, company_path(company), class: "dropdown-item" %>
+                  <% end %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to 'Create a new company', new_company_path, class: "dropdown-item" %>
+                <% end %>
+
+              </div>
+            </li>
+          </ul>
+        <% end %>
+
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <%=
@@ -33,6 +57,8 @@
       </div>
     </nav>
 
-    <%= yield %>
+    <div class="container">
+      <%= yield %>
+    </div>
   </body>
 </html>

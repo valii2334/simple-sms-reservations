@@ -21,5 +21,7 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :companies, except: [:destroy]
+
   root to: 'application#home'
 end
