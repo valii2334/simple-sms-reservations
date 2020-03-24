@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :messages do
     collection do
       get :inbound
+      get :inbound_twilio
       get :delivery
       get :status
     end

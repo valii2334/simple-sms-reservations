@@ -6,9 +6,9 @@ class Message
                 :company,
                 :additional_details
 
-  def initialize(message)
-    @sender = message['msisdn']
-    @text   = message['text']
+  def initialize(sender, text)
+    @sender = sender
+    @text   = text
     @company_code, @reservation_date, @additional_details = process_text
   end
 
