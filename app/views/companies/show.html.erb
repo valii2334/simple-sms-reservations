@@ -12,7 +12,9 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Phone number</th>
-          <th scope="col">Starting time</th>
+          <th scope="col">Start time</th>
+          <th scope="col">End time</th>
+          <th scope="col">Additional details</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +28,12 @@
             </td>
             <td>
               <%= reservation.reservation_date.strftime('%H:%M') %>
+            </td>
+            <td>
+              <%= (reservation.reservation_date + @company.unit_of_time.minutes).strftime('%H:%M') %>
+            </td>
+            <td>
+              <%= reservation.details %>
             </td>
           </tr>
         <% end %>
