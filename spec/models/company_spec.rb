@@ -42,11 +42,14 @@ RSpec.describe Company, type: :model do
       expect(company).to_not be_valid
     end
 
-    it 'is valid if contains only letters, numbers' do
-      company.code = 'VLZDevOps'
+    it 'is valid if contains only letters, numbers and dot' do
+      company.code = 'vlzdevops'
       expect(company).to be_valid
 
-      company.code = '01VLZDevOps'
+      company.code = '01vlzdevops'
+      expect(company).to be_valid
+
+      company.code = '01vlzdevops.'
       expect(company).to be_valid
     end
   end

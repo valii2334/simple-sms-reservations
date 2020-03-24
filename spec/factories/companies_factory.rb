@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :company do
     user
     name { 'VLZ DevOps' }
-    code { 'VLZDevOps' }
+    code { 'vlzdevops' }
     opening_time { Time.parse('09:00') }
     closing_time { Time.parse('20:00') }
     unit_of_time { 15 }

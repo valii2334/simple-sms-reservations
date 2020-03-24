@@ -27,7 +27,7 @@ class Message
   end
 
   def company_from_company_code
-    @company = Company.find_by(code: @company_code)
+    @company = Company.find_by(code: @company_code.downcase)
   end
 
   def create_reservation
