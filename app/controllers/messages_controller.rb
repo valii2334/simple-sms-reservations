@@ -6,7 +6,7 @@ class MessagesController < ActionController::Base
     text_to_send = message.perform
 
     client.sms.send(
-      from: '+40371700762',
+      from: ENV['NEXMO_NUMBER'],
       to: message.sender,
       text: text_to_send
     )
@@ -21,7 +21,7 @@ class MessagesController < ActionController::Base
     text_to_send = message.perform
 
     twilio_client.messages.create(
-      from: '+15878054694',
+      from: ENV['TWILIO_NUMBER'],
       to: message.sender,
       body: text_to_send
     )
