@@ -23,7 +23,7 @@ RSpec.describe Reservation, type: :model do
       reservation = build :reservation, company: company, reservation_date:  DateTime.new(2012, 07, 11, 9, 00, 0), phone_number: '0123456789'
 
       expect(reservation).to_not be_valid
-      expect(reservation.errors.to_a[0]).to eql('Reservation date is already reserved by you.')
+      expect(reservation.errors.to_a[0]).to eql('Reservation date is already reserved by you')
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe Reservation, type: :model do
       reservation = build :reservation, company: company, reservation_date:  DateTime.new(2012, 07, 11, 9, 00, 0), phone_number: '0123456789'
 
       expect(reservation).to_not be_valid
-      expect(reservation.errors.to_a[0]).to eql("Company #{company.name} is closed today.")
+      expect(reservation.errors.to_a[0]).to eql("Company #{company.name} is closed today")
     end
   end
 

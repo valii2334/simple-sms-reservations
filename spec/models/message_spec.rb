@@ -52,14 +52,14 @@ RSpec.describe Message, type: :model do
         company = create :company, temporarily_closed: true
 
         message = Message.new({ 'msisdn' => '0123456789', 'text' => "#{company.code}/09:00" })
-        expect(message.perform).to eql("Company #{company.name} is closed today.")
+        expect(message.perform).to eql("Company #{company.name} is closed today")
       end
 
       it 'returns time slot not available if invalid time is provided' do
         company = create :company
 
         message = Message.new({ 'msisdn' => '0123456789', 'text' => "#{company.code}/08:00" })
-        expect(message.perform).to eql('Reservation date can not be booked anymore.')
+        expect(message.perform).to eql('Reservation date can not be booked anymore')
       end
 
       it 'returns time slot not available if time slot is occupied' do
@@ -69,7 +69,7 @@ RSpec.describe Message, type: :model do
         expect(message.perform).to eql('Reservation succesfully created.')
 
         message = Message.new({ 'msisdn' => '0123456788', 'text' => "#{company.code}/09:00" })
-        expect(message.perform).to eql('Reservation date can not be booked anymore.')
+        expect(message.perform).to eql('Reservation date can not be booked anymore')
       end
     end
   end
