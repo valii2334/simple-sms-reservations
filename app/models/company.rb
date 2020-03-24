@@ -8,10 +8,15 @@ class Company < ApplicationRecord
   validates :closed_saturday, inclusion: { in: [ true, false ] }
   validates :closed_sunday, inclusion: { in: [ true, false ] }
   validates :temporarily_closed, inclusion: { in: [ true, false ] }
-  validates :code, uniqueness: true, format: { with: /\A[a-zA-Z0-9]+\z/ , message: 'no special characters, only letters and numbers' }
+  validates :code, uniqueness: true, format: { with: /\A[a-z0-9.]+\z/ , message: 'no special characters, only lowercase letters and numbers' }
   validates :unit_of_time, numericality: { greater_than_or_equal_to: 1 }
   validates :customers_per_unit_of_time, numericality: { greater_than_or_equal_to: 1 }
   validate :closing_time_bigger_than_oppening_time
+  before_save :downcase_code
+
+  def downcase_code
+    self.code.downcase!
+  end
 
   def closing_time_bigger_than_oppening_time
     if self.opening_time.present? &&

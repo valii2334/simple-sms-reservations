@@ -1,56 +1,75 @@
-<h2 class="text-center m-5">Edit company</h2>
+<h2 class="text-center m-5">Company details</h2>
 
-<div class="col-8 offset-2 col-sm-6 offset-sm-3">
-  <%= form_for @company do |f| %>
-    <%= render "devise/shared/error_messages", resource: @company %>
+<%= form_for @company do |f| %>
+  <%= render "devise/shared/error_messages", resource: @company %>
 
-    <div class="field">
-      <%= f.label :name %>
-      <%= f.text_field :name, autofocus: true, class: 'form-control m-2' %>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name, autofocus: true, class: 'form-control m-2' %>
+      </div>
     </div>
-
-    <div class="field">
-      <%= f.label :code %>
-      <%= f.text_field :code, class: 'form-control m-2' %>
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :code, 'Code (lowercase letters, numbers and .)' %>
+        <%= f.text_field :code, class: 'form-control m-2' %>
+      </div>
     </div>
+  </div>
 
-    <div class="field">
-      <%= f.label :unit_of_time %>
-      <%= f.number_field :unit_of_time, class: 'form-control m-2' %>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :unit_of_time, 'Average time of customer per reservation (minutes)' %>
+        <%= f.number_field :unit_of_time, class: 'form-control m-2' %>
+      </div>
     </div>
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :customers_per_unit_of_time, 'Number of simultaneous reservations' %>
+        <%= f.number_field :customers_per_unit_of_time, class: 'form-control m-2' %>
+      </div>
+    </div>
+  </div>
 
-    <div class="field">
-      <%= f.label :customers_per_unit_of_time %>
-      <%= f.number_field :customers_per_unit_of_time, class: 'form-control m-2' %>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :opening_time %>
+        <%= f.time_field(:opening_time, class: "form-control m-2") %>
+      </div>
     </div>
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :closing_time %>
+        <%= f.time_field(:closing_time, class: "form-control m-2") %>
+      </div>
+    </div>
+  </div>
 
-    <div class="field">
-      <%= f.label :opening_time %>
-      <%= f.time_field(:opening_time, class: "form-control m-2") %>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <div class="field">
+        <%= f.label :closed_saturday %>
+        <%= f.select(:closed_saturday, [true, false], {}, { class: 'form-control m-2' }) %>
+      </div>
     </div>
+    <div class="form-group col-md-4">
+      <div class="field">
+        <%= f.label :closed_sunday %>
+        <%= f.select(:closed_sunday, [true, false], {}, { class: 'form-control m-2' }) %>
+      </div>
+    </div>
+    <div class="form-group col-md-4">
+      <div class="field">
+        <%= f.label :temporarily_closed %>
+        <%= f.select(:temporarily_closed, [true, false], {}, { class: 'form-control m-2' }) %>
+      </div>
+    </div>
+  </div>
 
-    <div class="field">
-      <%= f.label :closing_time %>
-      <%= f.time_field(:closing_time, class: "form-control m-2") %>
-    </div>
-
-    <div class="field">
-      <%= f.label :closed_saturday %>
-      <%= f.select(:closed_saturday, [true, false], {}, { class: 'form-control m-2' }) %>
-    </div>
-
-    <div class="field">
-      <%= f.label :closed_sunday %>
-      <%= f.select(:closed_sunday, [true, false], {}, { class: 'form-control m-2' }) %>
-    </div>
-
-    <div class="field">
-      <%= f.label :temporarily_closed %>
-      <%= f.select(:temporarily_closed, [true, false], {}, { class: 'form-control m-2' }) %>
-    </div>
-
-    <div class="actions">
-      <%= f.submit "Save", class: 'btn btn-primary btn-block m-2' %>
-    </div>
-  <% end %>
-</div>
+  <div class="actions">
+    <%= f.submit "Save", class: 'btn btn-primary btn-block m-2' %>
+  </div>
+<% end %>
