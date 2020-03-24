@@ -1,5 +1,5 @@
 class Company < ApplicationRecord
-  has_many :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
+  has_many :reservations, -> { order(reservation_date: :asc) }, dependent: :destroy
   belongs_to :user, required: true
 
   validates :name, uniqueness: true, presence: true

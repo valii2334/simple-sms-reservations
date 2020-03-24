@@ -25,6 +25,8 @@ class MessagesController < ActionController::Base
       to: message.sender,
       body: text_to_send
     )
+
+    render json: { status: 200, text: 'inbound_twilio' }
   end
 
   def delivery
