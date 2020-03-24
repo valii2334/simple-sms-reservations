@@ -23,21 +23,34 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
         <% unless current_user.nil? %>
-          <ul class="navbar-nav mr-auto">
+          <% unless current_user.companies.empty? %>
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Reservations
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <% current_user.companies.each do |company| %>
+                    <%= link_to company.name, company_path(company), class: "dropdown-item" %>
+                  <% end %>
+                </div>
+              </li>
+            </ul>
+          <% end %>
+          <ul class="navbar-nav">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Companies
+                Edit
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
                 <% if current_user.companies.empty? %>
                   <%= link_to 'Create a new company', new_company_path, class: "dropdown-item" %>
                 <% else %>
                   <% current_user.companies.each do |company| %>
-                    <%= link_to company.name, company_path(company), class: "dropdown-item" %>
+                    <%= link_to company.name, edit_company_path(company), class: "dropdown-item" %>
                   <% end %>
                   <div class="dropdown-divider"></div>
-                  <%= link_to 'Create a new company', new_company_path, class: "dropdown-item" %>
+                  <%= link_to 'New company', new_company_path, class: "dropdown-item" %>
                 <% end %>
 
               </div>
