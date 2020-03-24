@@ -48,7 +48,7 @@ class Message
     if reservation.save
       return 'Reservation succesfully created.'
     else
-      return reservation.errors.full_messages.join(' ')
+      return reservation.errors.full_messages.join('.')
     end
   end
 end

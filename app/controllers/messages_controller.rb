@@ -6,7 +6,7 @@ class MessagesController < ActionController::Base
     text_to_send = message.perform
 
     client.sms.send(
-      from: 'VLZ DevOps',
+      from: '40371700762',
       to: message.sender,
       text: text_to_send
     )

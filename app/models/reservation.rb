@@ -3,7 +3,7 @@ class Reservation < ApplicationRecord
 
   validates :reservation_date, presence: true
   validates :phone_number, presence: true
-  validates_uniqueness_of :reservation_date, :scope => [:company_id, :phone_number], message: 'you already reserved this date' 
+  validates_uniqueness_of :reservation_date, :scope => [:company_id, :phone_number], message: 'is already reserved by you.'
   validate :company_is_open
   validate :time_slot_still_available
 
@@ -12,6 +12,6 @@ class Reservation < ApplicationRecord
   end
 
   def time_slot_still_available
-    errors.add(:reservation_date, 'all time slots for this time are occupied.') unless self.company.reservation_time_available?(self.reservation_date)
+    errors.add(:reservation_date, 'can not be booked anymore.') unless self.company.reservation_time_available?(self.reservation_date)
   end
 end
