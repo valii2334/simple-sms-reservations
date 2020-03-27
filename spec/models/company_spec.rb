@@ -264,4 +264,28 @@ RSpec.describe Company, type: :model do
       end
     end
   end
+
+  context '#schedule' do
+    it 'closed weekend' do
+      company.opening_time = DateTime.new(2012, 07, 11, 9, 02, 0)
+      company.closing_time = DateTime.new(2012, 07, 11, 9, 30, 0)
+
+      expect(company.schedule).to eql('Monday - Friday: 09:02 AM - 09:30 AM. Saturday: Closed. Sunday: Closed. ')
+    end
+
+    it 'open on weekend' do
+      company.opening_time = DateTime.new(2012, 07, 11, 9, 02, 0)
+      company.closing_time = DateTime.new(2012, 07, 11, 9, 30, 0)
+
+      company.closed_saturday = false
+      company.opening_time_saturday = DateTime.new(2012, 07, 11, 11, 0, 0)
+      company.closing_time_saturday = DateTime.new(2012, 07, 11, 14, 30, 0)
+
+      company.closed_sunday = false
+      company.opening_time_sunday = DateTime.new(2012, 07, 11, 15, 0, 0)
+      company.closing_time_sunday = DateTime.new(2012, 07, 11, 20, 0, 0)
+
+      expect(company.schedule).to eql('Monday - Friday: 09:02 AM - 09:30 AM. Saturday: 11:00 AM - 14:30 PM. Sunday: 15:00 PM - 20:00 PM. ')
+    end
+  end
 end

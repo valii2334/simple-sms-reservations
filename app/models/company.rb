@@ -77,4 +77,23 @@ class Company < ApplicationRecord
       return self.opening_time, self.closing_time
     end
   end
+
+  def schedule
+    readable_schedule = ''
+    readable_schedule += "Monday - Friday: #{self.opening_time.strftime('%H:%M %p')} - #{self.closing_time.strftime('%H:%M %p')}. "
+
+    if self.closed_saturday
+      readable_schedule += 'Saturday: Closed. '
+    else
+      readable_schedule += "Saturday: #{self.opening_time_saturday.strftime('%H:%M %p')} - #{self.closing_time_saturday.strftime('%H:%M %p')}. "
+    end
+
+    if self.closed_sunday
+      readable_schedule += 'Sunday: Closed. '
+    else
+      readable_schedule += "Sunday: #{self.opening_time_sunday.strftime('%H:%M %p')} - #{self.closing_time_sunday.strftime('%H:%M %p')}. "
+    end
+
+    readable_schedule
+  end
 end
