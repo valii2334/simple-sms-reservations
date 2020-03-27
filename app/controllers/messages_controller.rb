@@ -18,15 +18,19 @@ class MessagesController < ActionController::Base
     received_params = params.merge(parsed_body)
 
     message = Message.new(received_params['From'], received_params['Body'])
-    text_to_send = message.perform
 
-    twilio_client.messages.create(
-      from: ENV['TWILIO_NUMBER'],
-      to: message.sender,
-      body: text_to_send
-    )
+    twiml = Twilio::TwiML::MessagingResponse.new do |r|
+      r.message(
+        from: ENV['TWILIO_NUMBER'],
+        to: message.sender,
+        body: message.perform
+      )
+    end
 
-    render json: { status: 200, text: 'inbound_twilio' }
+    puts "Text to send is : #{message.perform}"
+    puts "Twilio log is: #{twiml.to_s}"
+
+    render xml: twiml.to_s
   end
 
   def delivery
@@ -44,10 +48,6 @@ class MessagesController < ActionController::Base
       api_key: ENV['NEXMO_API_KEY'],
       api_secret: ENV['NEXMO_API_SECRET']
     )
-  end
-
-  def twilio_client
-    Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
   end
 
   def parsed_body
