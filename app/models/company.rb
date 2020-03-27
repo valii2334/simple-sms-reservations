@@ -19,10 +19,7 @@ class Company < ApplicationRecord
   end
 
   def closing_time_bigger_than_oppening_time
-    if self.opening_time.present? &&
-      self.closing_time.present? &&
-      self.closing_time <= self.opening_time
-
+    if self.closing_time <= self.opening_time
       errors.add(:closing_time, "must be bigger than #{self.closing_time}")
     end
   end

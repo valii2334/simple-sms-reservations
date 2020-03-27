@@ -1,5 +1,3 @@
-<h2 class="text-center m-5">Company details</h2>
-
 <%= form_for @company do |f| %>
   <%= render "devise/shared/error_messages", resource: @company %>
 
@@ -44,6 +42,36 @@
       <div class="field">
         <%= f.label :closing_time %>
         <%= f.time_field(:closing_time, class: "form-control m-2") %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :opening_time_saturday %>
+        <%= f.time_field(:opening_time_saturday, class: "form-control m-2") %>
+      </div>
+    </div>
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :closing_time_saturday %>
+        <%= f.time_field(:closing_time_saturday, class: "form-control m-2") %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :opening_time_sunday %>
+        <%= f.time_field(:opening_time_sunday, class: "form-control m-2") %>
+      </div>
+    </div>
+    <div class="form-group col-md-6">
+      <div class="field">
+        <%= f.label :closing_time_sunday %>
+        <%= f.time_field(:closing_time_sunday, class: "form-control m-2") %>
       </div>
     </div>
   </div>
