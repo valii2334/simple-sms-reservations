@@ -174,8 +174,7 @@ RSpec.describe Company, type: :model do
 
       expect(company.available_reservation_times).to eql(
         [
-          DateTime.new(2012, 07, 11, 9, 02, 0).strftime('%H:%M'),
-          DateTime.new(2012, 07, 11, 9, 17, 0).strftime('%H:%M')
+          DateTime.new(2012, 07, 11, 9, 02, 0).strftime('%H:%M')
         ]
       )
     end

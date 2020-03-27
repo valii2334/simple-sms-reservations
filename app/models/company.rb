@@ -43,10 +43,11 @@ class Company < ApplicationRecord
   end
 
   def available_reservation_times
-    time_slots = []
+    time_slots            = []
+    open_time, close_time = current_day_opening_time_closing_time
+    hour                  = open_time
 
-    hour = opening_time
-    while hour < closing_time
+    while (hour + unit_of_time.minutes) <= close_time
       time_slots << hour.strftime('%H:%M')
       hour += unit_of_time.minutes
     end
@@ -65,5 +66,15 @@ class Company < ApplicationRecord
     return false unless available_reservation_times.include?(desired_reservation_time.strftime('%H:%M'))
     return false if reservations.where(reservation_date: desired_reservation_time).count >= customers_per_unit_of_time
     true
+  end
+
+  def current_day_opening_time_closing_time
+    if DateTime.now.strftime("%A") == 'Saturday'
+      return self.opening_time_saturday, self.closing_time_saturday
+    elsif DateTime.now.strftime("%A") == 'Sunday'
+      return self.opening_time_sunday, self.closing_time_sunday
+    else
+      return self.opening_time, self.closing_time
+    end
   end
 end
