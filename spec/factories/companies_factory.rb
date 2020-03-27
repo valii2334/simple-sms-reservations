@@ -7,8 +7,8 @@ FactoryBot.define do
     closing_time { Time.parse('20:00') }
     unit_of_time { 15 }
     customers_per_unit_of_time { 3 }
-    closed_saturday { false }
-    closed_sunday { false }
+    closed_saturday { true }
+    closed_sunday { true }
     temporarily_closed { false }
   end
 end

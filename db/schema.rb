@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_27_154509) do
+ActiveRecord::Schema.define(version: 2020_03_27_161638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(version: 2020_03_27_154509) do
     t.integer "customers_per_unit_of_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "closed_saturday", default: false
-    t.boolean "closed_sunday", default: false
+    t.boolean "closed_saturday", default: true, null: false
+    t.boolean "closed_sunday", default: true, null: false
     t.boolean "temporarily_closed", default: false
     t.datetime "opening_time"
     t.datetime "closing_time"

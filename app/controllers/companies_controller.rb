@@ -47,7 +47,11 @@ class CompaniesController < ApplicationController
       :closed_sunday,
       :temporarily_closed,
       :unit_of_time,
-      :customers_per_unit_of_time
+      :customers_per_unit_of_time,
+      :opening_time_saturday,
+      :closing_time_saturday,
+      :opening_time_sunday,
+      :closing_time_sunday
     )
   end
 end

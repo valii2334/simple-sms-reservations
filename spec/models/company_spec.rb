@@ -11,6 +11,10 @@ RSpec.describe Company, type: :model do
   it { should have_attribute :code }
   it { should have_attribute :opening_time }
   it { should have_attribute :closing_time }
+  it { should have_attribute :opening_time_saturday }
+  it { should have_attribute :closing_time_saturday }
+  it { should have_attribute :opening_time_sunday }
+  it { should have_attribute :closing_time_sunday }
   it { should have_attribute :unit_of_time }
   it { should have_attribute :customers_per_unit_of_time }
   it { should have_attribute :closed_saturday }
@@ -72,6 +76,74 @@ RSpec.describe Company, type: :model do
     it 'is valid if closing_time is bigger than opening_time' do
       company.opening_time = DateTime.new(2012, 07, 11, 9, 00, 0)
       company.closing_time = DateTime.new(2012, 07, 11, 10, 00, 0)
+
+      expect(company).to be_valid
+    end
+  end
+
+  context '#closing_time_bigger_than_oppening_time_saturday' do
+    it 'is not valid if closing_time is less than opening_time' do
+      company.closed_saturday = false
+      company.opening_time_saturday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_saturday = DateTime.new(2012, 07, 11, 8, 00, 0)
+
+      expect(company).to_not be_valid
+    end
+
+    it 'is valid if closing_time is less than opening_time but closed_saturday is true' do
+      company.closed_saturday = true
+      company.opening_time_saturday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_saturday = DateTime.new(2012, 07, 11, 8, 00, 0)
+
+      expect(company).to be_valid
+    end
+
+    it 'is not valid if closing_time is equal to opening_time' do
+      company.closed_saturday = false
+      company.opening_time_saturday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_saturday = DateTime.new(2012, 07, 11, 9, 00, 0)
+
+      expect(company).to_not be_valid
+    end
+
+    it 'is valid if closing_time is bigger than opening_time' do
+      company.closed_saturday = false
+      company.opening_time_saturday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_saturday = DateTime.new(2012, 07, 11, 10, 00, 0)
+
+      expect(company).to be_valid
+    end
+  end
+
+  context '#closing_time_bigger_than_oppening_time_sunday' do
+    it 'is not valid if closing_time is less than opening_time' do
+      company.closed_sunday = false
+      company.opening_time_sunday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_sunday = DateTime.new(2012, 07, 11, 8, 00, 0)
+
+      expect(company).to_not be_valid
+    end
+
+    it 'is valid if closing_time is less than opening_time but closed_sunday is true' do
+      company.closed_sunday = true
+      company.opening_time_sunday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_sunday = DateTime.new(2012, 07, 11, 8, 00, 0)
+
+      expect(company).to be_valid
+    end
+
+    it 'is not valid if closing_time is equal to opening_time' do
+      company.closed_sunday = false
+      company.opening_time_sunday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_sunday = DateTime.new(2012, 07, 11, 9, 00, 0)
+
+      expect(company).to_not be_valid
+    end
+
+    it 'is valid if closing_time is bigger than opening_time' do
+      company.closed_sunday = false
+      company.opening_time_sunday = DateTime.new(2012, 07, 11, 9, 00, 0)
+      company.closing_time_sunday = DateTime.new(2012, 07, 11, 10, 00, 0)
 
       expect(company).to be_valid
     end
