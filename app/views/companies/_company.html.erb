@@ -47,46 +47,16 @@
   </div>
 
   <div class="form-row">
-    <div class="form-group col-md-6">
-      <div class="field">
-        <%= f.label :opening_time_saturday %>
-        <%= f.time_field(:opening_time_saturday, class: "form-control m-2") %>
-      </div>
-    </div>
-    <div class="form-group col-md-6">
-      <div class="field">
-        <%= f.label :closing_time_saturday %>
-        <%= f.time_field(:closing_time_saturday, class: "form-control m-2") %>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <div class="field">
-        <%= f.label :opening_time_sunday %>
-        <%= f.time_field(:opening_time_sunday, class: "form-control m-2") %>
-      </div>
-    </div>
-    <div class="form-group col-md-6">
-      <div class="field">
-        <%= f.label :closing_time_sunday %>
-        <%= f.time_field(:closing_time_sunday, class: "form-control m-2") %>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
     <div class="form-group col-md-4">
       <div class="field">
         <%= f.label :closed_saturday %>
-        <%= f.select(:closed_saturday, [true, false], {}, { class: 'form-control m-2' }) %>
+        <%= f.select(:closed_saturday, [true, false], {}, { class: 'form-control m-2', onchange: "showHide('company_closed_saturday', 'saturday_schedule')" }) %>
       </div>
     </div>
     <div class="form-group col-md-4">
       <div class="field">
         <%= f.label :closed_sunday %>
-        <%= f.select(:closed_sunday, [true, false], {}, { class: 'form-control m-2' }) %>
+        <%= f.select(:closed_sunday, [true, false], {}, { class: 'form-control m-2', onchange: "showHide('company_closed_sunday', 'sunday_schedule')" }) %>
       </div>
     </div>
     <div class="form-group col-md-4">
@@ -97,7 +67,59 @@
     </div>
   </div>
 
+  <div id="saturday_schedule">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <div class="field">
+          <%= f.label :opening_time_saturday %>
+          <%= f.time_field(:opening_time_saturday, class: "form-control m-2") %>
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <div class="field">
+          <%= f.label :closing_time_saturday %>
+          <%= f.time_field(:closing_time_saturday, class: "form-control m-2") %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sunday_schedule">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <div class="field">
+          <%= f.label :opening_time_sunday %>
+          <%= f.time_field(:opening_time_sunday, class: "form-control m-2") %>
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <div class="field">
+          <%= f.label :closing_time_sunday %>
+          <%= f.time_field(:closing_time_sunday, class: "form-control m-2") %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="actions">
     <%= f.submit "Save", class: 'btn btn-primary btn-block m-2' %>
   </div>
+<% end %>
+
+<%= javascript_tag do %>
+  window.onload = (event) => {
+    showHide('company_closed_saturday', 'saturday_schedule');
+    showHide('company_closed_sunday', 'sunday_schedule');
+  };
+
+  function showHide(selectObjectId, id) {
+    var selectedValue = document.getElementById(selectObjectId).value;
+    var weekendDaySchedule = document.getElementById(id);
+
+    if (selectedValue == 'true') {
+      weekendDaySchedule.style.display = "none";
+    } else {
+      weekendDaySchedule.style.display = "block";
+    }
+  }
 <% end %>
