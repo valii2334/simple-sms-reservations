@@ -1,25 +1,30 @@
 require 'convert_time_to_datetime'
 
 class Company < ApplicationRecord
-  has_many :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
+  has_many   :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
   belongs_to :user, required: true
 
-  validates :name, uniqueness: true, presence: true
-  validates :opening_time, presence: true
-  validates :closing_time, presence: true
-  validates :closed_saturday, inclusion: { in: [ true, false ] }
-  validates :closed_sunday, inclusion: { in: [ true, false ] }
-  validates :opening_time_saturday, presence: true, if: -> { !self.closed_saturday }
-  validates :closing_time_saturday, presence: true, if: -> { !self.closed_saturday }
-  validates :opening_time_sunday, presence: true, if: -> { !self.closed_sunday }
-  validates :closing_time_sunday, presence: true, if: -> { !self.closed_sunday }
-  validates :temporarily_closed, inclusion: { in: [ true, false ] }
-  validates :code, uniqueness: true, format: { with: /\A[a-z0-9.]+\z/ , message: 'no special characters, only lowercase letters and numbers' }
-  validates :unit_of_time, numericality: { greater_than_or_equal_to: 1 }
-  validates :customers_per_unit_of_time, numericality: { greater_than_or_equal_to: 1 }
-  validate :closing_time_bigger_than_oppening_time, if: -> { self.opening_time.present? && self.closing_time.present? }
+  validates :name,                                           uniqueness: true,
+                                                             presence: true
+  validates :opening_time,                                   presence: true
+  validates :closing_time,                                   presence: true
+  validates :closed_saturday,                                inclusion: { in: [ true, false ] }
+  validates :closed_sunday,                                  inclusion: { in: [ true, false ] }
+  validates :opening_time_saturday,                          presence: true, if: -> { !self.closed_saturday }
+  validates :closing_time_saturday,                          presence: true, if: -> { !self.closed_saturday }
+  validates :opening_time_sunday,                            presence: true, if: -> { !self.closed_sunday }
+  validates :closing_time_sunday,                            presence: true, if: -> { !self.closed_sunday }
+  validates :temporarily_closed,                             inclusion: { in: [ true, false ] }
+  validates :code,                                           uniqueness: true,
+                                                             format: { with: /\A[a-z0-9.]+\z/ ,
+                                                             message: 'no special characters, only lowercase letters and numbers' }
+
+  validates :unit_of_time,                                   numericality: { greater_than_or_equal_to: 1 }
+  validates :customers_per_unit_of_time,                     numericality: { greater_than_or_equal_to: 1 }
+  validate :closing_time_bigger_than_oppening_time,          if: -> { self.opening_time.present? && self.closing_time.present? }
   validate :closing_time_bigger_than_oppening_time_saturday, if: -> { self.opening_time_saturday.present? && self.closing_time_saturday.present? && !self.closed_saturday }
-  validate :closing_time_bigger_than_oppening_time_sunday, if: -> { self.opening_time_sunday.present? && self.closing_time_sunday.present? && !self.closed_sunday }
+  validate :closing_time_bigger_than_oppening_time_sunday,   if: -> { self.opening_time_sunday.present? && self.closing_time_sunday.present? && !self.closed_sunday }
+
   before_save :downcase_code
 
   def downcase_code
