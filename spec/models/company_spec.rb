@@ -20,6 +20,7 @@ RSpec.describe Company, type: :model do
   it { should have_attribute :closed_saturday }
   it { should have_attribute :closed_sunday }
   it { should have_attribute :temporarily_closed }
+  it { should have_attribute :reservation_message }
   it { should have_many :reservations }
   it { should belong_to(:user).without_validating_presence }
 
@@ -190,6 +191,12 @@ RSpec.describe Company, type: :model do
     end
 
     context '#open_today?' do
+      it 'returns true if not temporarily_closed' do
+        company.temporarily_closed = false
+
+        expect(company.open_today?).to eql(true)
+      end
+
       it 'returns false if temporarily_closed' do
         company.temporarily_closed = true
 
@@ -301,7 +308,6 @@ RSpec.describe Company, type: :model do
     context 'reservation_time_available saturday' do
       it 'returns true if valid time is provided' do
         company.closed_saturday = false
-        company.closed_sunday = false
 
         expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 10, 0))).to eql(true)
       end
@@ -319,7 +325,6 @@ RSpec.describe Company, type: :model do
 
     context 'reservation_time_available sunday' do
       it 'returns true if valid time is provided' do
-        company.closed_saturday = false
         company.closed_sunday = false
 
         expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 14, 0))).to eql(true)

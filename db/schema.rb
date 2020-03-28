@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_27_161638) do
+ActiveRecord::Schema.define(version: 2020_03_28_151416) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2020_03_27_161638) do
     t.datetime "closing_time_saturday"
     t.datetime "opening_time_sunday"
     t.datetime "closing_time_sunday"
+    t.string "reservation_message"
     t.index ["code"], name: "index_companies_on_code", unique: true
     t.index ["name"], name: "index_companies_on_name", unique: true
   end

@@ -1,6 +1,8 @@
-require 'convert_time_to_datetime'
+require 'time_utils'
 
 class Company < ApplicationRecord
+  include TimeUtils
+
   has_many   :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
   belongs_to :user, required: true
 
@@ -55,7 +57,7 @@ class Company < ApplicationRecord
     hour                  = open_time
 
     while (hour + unit_of_time.minutes) <= close_time
-      time_slots << hour.strftime('%H:%M')
+      time_slots << hour_min(hour)
       hour += unit_of_time.minutes
     end
 
@@ -64,21 +66,21 @@ class Company < ApplicationRecord
 
   def open_today?
     return false if temporarily_closed
-    return false if DateTime.now.strftime("%A") == 'Saturday' && closed_saturday
-    return false if DateTime.now.strftime("%A") == 'Sunday' && closed_sunday
+    return false if DateTime.now.saturday? && closed_saturday
+    return false if DateTime.now.sunday? && closed_sunday
     true
   end
 
   def reservation_time_available?(desired_reservation_time)
-    return false unless available_reservation_times.include?(desired_reservation_time.strftime('%H:%M'))
+    return false unless available_reservation_times.include?(hour_min(desired_reservation_time))
     return false if reservations.where(reservation_date: desired_reservation_time).count >= customers_per_unit_of_time
     true
   end
 
   def current_day_opening_time_closing_time
-    if DateTime.now.strftime("%A") == 'Saturday'
+    if DateTime.now.saturday?
       return self.opening_time_saturday, self.closing_time_saturday
-    elsif DateTime.now.strftime("%A") == 'Sunday'
+    elsif DateTime.now.sunday?
       return self.opening_time_sunday, self.closing_time_sunday
     else
       return self.opening_time, self.closing_time
@@ -87,18 +89,18 @@ class Company < ApplicationRecord
 
   def schedule
     readable_schedule = ''
-    readable_schedule += "Monday - Friday: #{self.opening_time.strftime('%H:%M %p')} - #{self.closing_time.strftime('%H:%M %p')}. "
+    readable_schedule += "Monday - Friday: #{hour_min_am_pm(self.opening_time)} - #{hour_min_am_pm(self.closing_time)}. "
 
     if self.closed_saturday
       readable_schedule += 'Saturday: Closed. '
     else
-      readable_schedule += "Saturday: #{self.opening_time_saturday.strftime('%H:%M %p')} - #{self.closing_time_saturday.strftime('%H:%M %p')}. "
+      readable_schedule += "Saturday: #{hour_min_am_pm(self.opening_time_saturday)} - #{hour_min_am_pm(self.closing_time_saturday)}. "
     end
 
     if self.closed_sunday
       readable_schedule += 'Sunday: Closed. '
     else
-      readable_schedule += "Sunday: #{self.opening_time_sunday.strftime('%H:%M %p')} - #{self.closing_time_sunday.strftime('%H:%M %p')}. "
+      readable_schedule += "Sunday: #{hour_min_am_pm(self.opening_time_sunday)} - #{hour_min_am_pm(self.closing_time_sunday)}. "
     end
 
     readable_schedule
@@ -109,7 +111,7 @@ class Company < ApplicationRecord
     next_n_available_time_slots = []
 
     all_company_time_slots.each do |time_slot|
-      reservation_date = ConvertTimeToDateTime.perform(time_slot)
+      reservation_date = datetime_from_time(time_slot)
 
       break if next_n_available_time_slots.size >= number_of_time_slots_available
       next if reservation_date < desired_reservation_time
@@ -125,9 +127,9 @@ class Company < ApplicationRecord
     next_n_available_time_slots = next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
 
     if next_n_available_time_slots.empty?
-      'There are no more free spots for today'
+      'There are no more free spots for today.'
     else
-      "Next #{next_n_available_time_slots.count} available spot(s) are: #{next_n_available_time_slots.join(',')}"
+      "Next #{next_n_available_time_slots.count} available spot(s) are: #{next_n_available_time_slots.join(', ')}."
     end
   end
 end

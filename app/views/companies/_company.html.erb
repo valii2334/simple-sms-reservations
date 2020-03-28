@@ -17,6 +17,15 @@
   </div>
 
   <div class="form-row">
+    <div class="form-group col-md-12">
+      <div class="field">
+        <%= f.label :reservation_message %>
+        <%= f.text_field :reservation_message, class: 'form-control m-2' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
     <div class="form-group col-md-6">
       <div class="field">
         <%= f.label :unit_of_time, 'Average time of customer per reservation (minutes)' %>

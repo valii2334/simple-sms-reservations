@@ -19,6 +19,7 @@ gem 'twilio-ruby', '~> 5.31.1'
 gem 'devise',           '~> 4.7.1'
 gem 'omniauth-github',  '~> 1.3.0'
 gem 'bootsnap',         '>= 1.4.2', require: false
+gem 'rubocop',          require: false
 
 group :development, :test do
   gem 'rspec-rails',    '~> 4.0.0.rc1'

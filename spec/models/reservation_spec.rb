@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Reservation, type: :model do
   let(:company) { create(:company) }
 
-  context '#uniqueness' do
+  context '#already_booked_today' do
     before do
       Timecop.freeze(DateTime.new(2012, 07, 11))
     end
