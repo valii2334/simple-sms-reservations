@@ -1,3 +1,5 @@
+require 'convert_time_to_datetime'
+
 class Company < ApplicationRecord
   has_many :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
   belongs_to :user, required: true
@@ -98,14 +100,14 @@ class Company < ApplicationRecord
   end
 
   def next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
-    all_company_time_slots = available_reservation_times
+    all_company_time_slots      = available_reservation_times
     next_n_available_time_slots = []
 
     all_company_time_slots.each do |time_slot|
+      reservation_date = ConvertTimeToDateTime.perform(time_slot)
+
       break if next_n_available_time_slots.size >= number_of_time_slots_available
-
-      reservation_date = time_slot.to_datetime.in_time_zone
-
+      next if reservation_date < desired_reservation_time
       next unless reservation_time_available?(reservation_date)
 
       next_n_available_time_slots << time_slot

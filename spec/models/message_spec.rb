@@ -15,7 +15,7 @@ RSpec.describe Message, type: :model do
 
       expect(message.sender).to eql('0123456789')
       expect(message.text).to eql('VlzDevOps/12:00')
-      expect(message.reservation_date).to eql('12:00'.to_datetime.in_time_zone)
+      expect(message.reservation_date).to eql(DateTime.now.in_time_zone.beginning_of_day.change({hour: '12:00'.to_datetime.hour, min: '12:00'.to_datetime.min}))
       expect(message.company_code).to eql('VlzDevOps')
     end
   end

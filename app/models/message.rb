@@ -1,3 +1,5 @@
+require 'convert_time_to_datetime'
+
 class Message
   attr_accessor :sender,
                 :text,
@@ -25,7 +27,7 @@ class Message
     store_code = store_code_and_reservation_date.split('/')[0]
 
     reservation_info = store_code_and_reservation_date.split('/')[1]
-    reservation_date = reservation_info.to_datetime.in_time_zone
+    reservation_date = ConvertTimeToDateTime.perform(reservation_info)
 
     return store_code, reservation_date, additional_details
   rescue

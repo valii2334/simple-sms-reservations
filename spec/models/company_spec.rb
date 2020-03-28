@@ -275,6 +275,17 @@ RSpec.describe Company, type: :model do
 
         expect(company.next_available_time_slots(DateTime.new(2012, 07, 11, 9, 02), 2)).to eql(['09:12', '09:22'])
       end
+
+      it 'returns next 2 available time slots 05:05, 05:10' do
+        company.customers_per_unit_of_time = 1
+        company.unit_of_time = 5
+        company.opening_time = DateTime.new(2012, 07, 11, 01, 0)
+        company.closing_time = DateTime.new(2012, 07, 11, 06, 0)
+
+        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 5, 0)
+
+        expect(company.next_available_time_slots(DateTime.new(2012, 07, 11, 5, 0), 2)).to eql(['05:05', '05:10'])
+      end
     end
   end
 
