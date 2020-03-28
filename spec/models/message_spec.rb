@@ -15,7 +15,7 @@ RSpec.describe Message, type: :model do
 
       expect(message.sender).to eql('0123456789')
       expect(message.text).to eql('VlzDevOps/12:00')
-      expect(message.reservation_date).to eql(DateTime.now.change({ hour: 12, min: 0}))
+      expect(message.reservation_date).to eql('12:00'.to_datetime.in_time_zone)
       expect(message.company_code).to eql('VlzDevOps')
     end
   end
@@ -60,14 +60,14 @@ RSpec.describe Message, type: :model do
         company = create :company, temporarily_closed: true
 
         message = Message.new('0123456789', "#{company.code}/09:00")
-        expect(message.perform).to eql("#{company.name} is closed today. Our schedule is Monday - Friday: 06:00 AM - 17:00 PM. Saturday: Closed. Sunday: Closed. ")
+        expect(message.perform).to eql("#{company.name} is closed today. Our schedule is Monday - Friday: 09:00 AM - 10:00 AM. Saturday: Closed. Sunday: Closed. ")
       end
 
       it 'returns time slot not available if invalid time is provided' do
         company = create :company
 
         message = Message.new('0123456789', "#{company.code}/08:00")
-        expect(message.perform).to eql('You can not make a reservation at this time. Next 3 available spot(s) are: 06:00,06:15,06:30')
+        expect(message.perform).to eql('You can not make a reservation at this time. Next 3 available spot(s) are: 09:00,09:15,09:30')
       end
 
       it 'returns time slot not available if time slot is occupied' do
@@ -77,7 +77,7 @@ RSpec.describe Message, type: :model do
         expect(message.perform).to eql('Reservation succesfully created.')
 
         message = Message.new('0123456788', "#{company.code}/09:00")
-        expect(message.perform).to eql('You can not make a reservation at this time. Next 3 available spot(s) are: 06:15,06:30,06:45')
+        expect(message.perform).to eql('You can not make a reservation at this time. Next 3 available spot(s) are: 09:15,09:30,09:45')
       end
     end
   end

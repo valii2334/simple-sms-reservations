@@ -25,8 +25,7 @@ class Message
     store_code = store_code_and_reservation_date.split('/')[0]
 
     reservation_info = store_code_and_reservation_date.split('/')[1]
-    reservation_info = Time.parse(reservation_info)
-    reservation_date = DateTime.now.change({ hour: reservation_info.hour, min: reservation_info.min})
+    reservation_date = reservation_info.to_datetime.in_time_zone
 
     return store_code, reservation_date, additional_details
   rescue

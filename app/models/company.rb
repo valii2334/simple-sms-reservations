@@ -104,8 +104,8 @@ class Company < ApplicationRecord
     all_company_time_slots.each do |time_slot|
       break if next_n_available_time_slots.size >= number_of_time_slots_available
 
-      reservation_info = Time.parse(time_slot)
-      reservation_date = desired_reservation_time.change({ hour: reservation_info.hour, min: reservation_info.min})
+      reservation_date = time_slot.to_datetime.in_time_zone
+
       next unless reservation_time_available?(reservation_date)
 
       next_n_available_time_slots << time_slot

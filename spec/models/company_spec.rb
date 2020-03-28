@@ -199,23 +199,14 @@ RSpec.describe Company, type: :model do
 
     describe '#reservation_time_available?' do
       it 'returns false if invalid time is provided' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
         expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 9, 10))).to eql(false)
       end
 
       it 'returns true if valid time is provided' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
         expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 9, 0))).to eql(true)
       end
 
       it 'returns false if all time slots at 9:00 are occupied' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
         create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
         create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
         create :reservation, company: company, phone_number: '0123456783', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
@@ -224,9 +215,6 @@ RSpec.describe Company, type: :model do
       end
 
       it 'returns true if one time slots at 9:00 is available' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
         create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
         create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
 
@@ -243,18 +231,10 @@ RSpec.describe Company, type: :model do
       end
 
       it 'open on weekend' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 02)
-        company.closing_time = DateTime.new(2012, 07, 11, 9, 30)
-
         company.closed_saturday = false
-        company.opening_time_saturday = DateTime.new(2012, 07, 11, 11, 0)
-        company.closing_time_saturday = DateTime.new(2012, 07, 11, 14, 30)
-
         company.closed_sunday = false
-        company.opening_time_sunday = DateTime.new(2012, 07, 11, 15, 0)
-        company.closing_time_sunday = DateTime.new(2012, 07, 11, 20, 0)
 
-        expect(company.schedule).to eql('Monday - Friday: 09:02 AM - 09:30 AM. Saturday: 11:00 AM - 14:30 PM. Sunday: 15:00 PM - 20:00 PM. ')
+        expect(company.schedule).to eql('Monday - Friday: 09:00 AM - 10:00 AM. Saturday: 10:00 AM - 12:00 PM. Sunday: 14:00 PM - 16:00 PM. ')
       end
     end
 
@@ -300,7 +280,7 @@ RSpec.describe Company, type: :model do
 
   describe 'saturday' do
     before do
-      Timecop.freeze(DateTime.new(2012, 07, 14, 1, 0))
+      Timecop.freeze(DateTime.new(2012, 07, 14))
     end
 
     after do
@@ -310,24 +290,16 @@ RSpec.describe Company, type: :model do
     context 'reservation_time_available saturday' do
       it 'returns true if valid time is provided' do
         company.closed_saturday = false
-        company.opening_time_saturday = DateTime.new(2012, 07, 11, 1, 0)
-        company.closing_time_saturday = DateTime.new(2012, 07, 11, 2, 0)
-
         company.closed_sunday = false
-        company.opening_time_sunday = DateTime.new(2012, 07, 11, 2, 0)
-        company.closing_time_sunday = DateTime.new(2012, 07, 11, 3, 0)
 
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 1, 0))).to eql(true)
+        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 10, 0))).to eql(true)
       end
     end
   end
 
   describe 'sunday' do
     before do
-      Timecop.freeze(DateTime.new(2012, 07, 15, 1, 0))
+      Timecop.freeze(DateTime.new(2012, 07, 15))
     end
 
     after do
@@ -337,17 +309,9 @@ RSpec.describe Company, type: :model do
     context 'reservation_time_available sunday' do
       it 'returns true if valid time is provided' do
         company.closed_saturday = false
-        company.opening_time_saturday = DateTime.new(2012, 07, 11, 1, 0)
-        company.closing_time_saturday = DateTime.new(2012, 07, 11, 2, 0)
-
         company.closed_sunday = false
-        company.opening_time_sunday = DateTime.new(2012, 07, 11, 3, 0)
-        company.closing_time_sunday = DateTime.new(2012, 07, 11, 4, 0)
 
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 3, 0))).to eql(true)
+        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 14, 0))).to eql(true)
       end
     end
   end
