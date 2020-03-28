@@ -1,11 +1,11 @@
 <% if @company.reservations.empty? %>
-  <h5 style="text-align: center; margin: 20px;">
+  <h5 style="text-align: center;">
     You don't have any reservations for today !
   </h5>
 <% else %>
   <% @company.reservations.group_by { |reservation| reservation.created_at.to_date }.each do |date, reservations| %>
     <h5 style="margin: 20px;">
-      <%= date %>
+      <%= date.strftime('%d %B %Y') %>
     </h5>
     <table class="table" style="margin-top: 20px;">
       <thead>

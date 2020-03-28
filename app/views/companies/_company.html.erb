@@ -107,10 +107,8 @@
 <% end %>
 
 <%= javascript_tag do %>
-  window.onload = (event) => {
-    showHide('company_closed_saturday', 'saturday_schedule');
-    showHide('company_closed_sunday', 'sunday_schedule');
-  };
+  showHide('company_closed_saturday', 'saturday_schedule');
+  showHide('company_closed_sunday', 'sunday_schedule');
 
   function showHide(selectObjectId, id) {
     var selectedValue = document.getElementById(selectObjectId).value;
