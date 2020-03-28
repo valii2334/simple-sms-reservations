@@ -17,23 +17,31 @@ RSpec.describe Reservation, type: :model do
 
   it { reservation.should validate_presence_of :phone_number }
 
+  before do
+    Timecop.freeze(DateTime.new(2012, 07, 11))
+  end
+
+  after do
+    Timecop.return
+  end
+
   context '#uniqueness' do
-    it 'can not create a reservation with same company_id, reservation_date, phone_number' do
+    it 'can not create more than one reservation per day' do
       create :reservation, company: company, reservation_date:  DateTime.new(2012, 07, 11, 9, 00, 0), phone_number: '0123456789'
       reservation = build :reservation, company: company, reservation_date:  DateTime.new(2012, 07, 11, 9, 00, 0), phone_number: '0123456789'
 
       expect(reservation).to_not be_valid
-      expect(reservation.errors.to_a[0]).to eql('Reservation date is already reserved by you')
+      expect(reservation.errors.to_a[0]).to eql('You can not make more than one reservation per day for each company')
     end
   end
 
   context '#company_is_open' do
-    it 'can not create a reservation if company is closed' do
+    it 'can not create a reservation if company is temporarily closed' do
       company.update(temporarily_closed: true)
       reservation = build :reservation, company: company, reservation_date:  DateTime.new(2012, 07, 11, 9, 00, 0), phone_number: '0123456789'
 
       expect(reservation).to_not be_valid
-      expect(reservation.errors.to_a[0]).to eql("Company #{company.name} is closed today")
+      expect(reservation.errors.to_a[0]).to eql("#{company.name} is closed today. Our schedule is Monday - Friday: 06:00 AM - 17:00 PM. Saturday: Closed. Sunday: Closed. ")
     end
   end
 

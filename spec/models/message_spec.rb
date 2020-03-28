@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Message, type: :model do
+  before do
+    Timecop.freeze(DateTime.new(2012, 07, 11))
+  end
+
+  after do
+    Timecop.return
+  end
+
   context '#process_text' do
     it 'should return correct data' do
       message = Message.new('0123456789', 'VlzDevOps/12:00')
@@ -52,14 +60,14 @@ RSpec.describe Message, type: :model do
         company = create :company, temporarily_closed: true
 
         message = Message.new('0123456789', "#{company.code}/09:00")
-        expect(message.perform).to eql("Company #{company.name} is closed today")
+        expect(message.perform).to eql("#{company.name} is closed today. Our schedule is Monday - Friday: 06:00 AM - 17:00 PM. Saturday: Closed. Sunday: Closed. ")
       end
 
       it 'returns time slot not available if invalid time is provided' do
         company = create :company
 
         message = Message.new('0123456789', "#{company.code}/08:00")
-        expect(message.perform).to eql('Reservation date can not be booked anymore')
+        expect(message.perform).to eql('You can not make a reservation at this time. Next 3 available spot(s) are: 06:00,06:15,06:30')
       end
 
       it 'returns time slot not available if time slot is occupied' do
@@ -69,7 +77,7 @@ RSpec.describe Message, type: :model do
         expect(message.perform).to eql('Reservation succesfully created.')
 
         message = Message.new('0123456788', "#{company.code}/09:00")
-        expect(message.perform).to eql('Reservation date can not be booked anymore')
+        expect(message.perform).to eql('You can not make a reservation at this time. Next 3 available spot(s) are: 06:15,06:30,06:45')
       end
     end
   end

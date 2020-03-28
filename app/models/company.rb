@@ -96,4 +96,31 @@ class Company < ApplicationRecord
 
     readable_schedule
   end
+
+  def next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
+    all_company_time_slots = available_reservation_times
+    next_n_available_time_slots = []
+
+    all_company_time_slots.each do |time_slot|
+      break if next_n_available_time_slots.size >= number_of_time_slots_available
+
+      reservation_info = Time.parse(time_slot)
+      reservation_date = desired_reservation_time.change({ hour: reservation_info.hour, min: reservation_info.min})
+      next unless reservation_time_available?(reservation_date)
+
+      next_n_available_time_slots << time_slot
+    end
+
+    next_n_available_time_slots
+  end
+
+  def next_available_time_slots_to_s(desired_reservation_time, number_of_time_slots_available)
+    next_n_available_time_slots = next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
+
+    if next_n_available_time_slots.empty?
+      'There are no more free spots for today'
+    else
+      "Next #{next_n_available_time_slots.count} available spot(s) are: #{next_n_available_time_slots.join(',')}"
+    end
+  end
 end
