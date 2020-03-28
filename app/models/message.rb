@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'time_utils'
 
 class Message
@@ -17,8 +19,9 @@ class Message
   end
 
   def perform
-    return "Message format is not valid. Message example: CompanyCode 14:00" if @company_code.nil? || @reservation_date.nil?
-    return "Company was not found. Message example: CompanyCode 14:00"       if company_from_company_code.nil?
+    return 'Message format is not valid. Message example: CompanyCode 14:00' if @company_code.nil? || @reservation_date.nil?
+    return 'Company was not found. Message example: CompanyCode 14:00'       if company_from_company_code.nil?
+
     create_reservation
   end
 
@@ -27,9 +30,9 @@ class Message
     reservation_date   = datetime_from_time(@text.split(' ')[1])
     additional_details = @text.split(' ').drop(2).join(' ')
 
-    return store_code, reservation_date, additional_details
+    [store_code, reservation_date, additional_details]
   rescue
-    return nil, nil, nil
+    [nil, nil, nil]
   end
 
   def company_from_company_code
@@ -43,11 +46,8 @@ class Message
       company_id:       @company.id,
       details:          additional_details
     )
+    return "Reservation created for #{@company.name} at #{hour_min_am_pm(@reservation_date)}. #{@company.reservation_message}" if reservation.save
 
-    if reservation.save
-      return "Reservation created for #{@company.name} at #{hour_min_am_pm(@reservation_date)}. #{@company.reservation_message}"
-    else
-      return reservation.errors.full_messages.join('.')
-    end
+    reservation.errors.full_messages.join('.')
   end
 end

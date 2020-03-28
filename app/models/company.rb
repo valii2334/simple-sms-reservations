@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'time_utils'
 
 class Company < ApplicationRecord
@@ -10,45 +12,44 @@ class Company < ApplicationRecord
                                                              presence: true
   validates :opening_time,                                   presence: true
   validates :closing_time,                                   presence: true
-  validates :closed_saturday,                                inclusion: { in: [ true, false ] }
-  validates :closed_sunday,                                  inclusion: { in: [ true, false ] }
-  validates :opening_time_saturday,                          presence: true, if: -> { !self.closed_saturday }
-  validates :closing_time_saturday,                          presence: true, if: -> { !self.closed_saturday }
-  validates :opening_time_sunday,                            presence: true, if: -> { !self.closed_sunday }
-  validates :closing_time_sunday,                            presence: true, if: -> { !self.closed_sunday }
-  validates :temporarily_closed,                             inclusion: { in: [ true, false ] }
+  validates :closed_saturday,                                inclusion: { in: [true, false] }
+  validates :closed_sunday,                                  inclusion: { in: [true, false] }
+  validates :opening_time_saturday,                          presence: true, if: -> { !closed_saturday }
+  validates :closing_time_saturday,                          presence: true, if: -> { !closed_saturday }
+  validates :opening_time_sunday,                            presence: true, if: -> { !closed_sunday }
+  validates :closing_time_sunday,                            presence: true, if: -> { !closed_sunday }
+  validates :temporarily_closed,                             inclusion: { in: [true, false] }
   validates :code,                                           uniqueness: true,
-                                                             format: { with: /\A[a-z0-9.]+\z/ ,
+                                                             format: { with: /\A[a-z0-9.]+\z/,
                                                              message: 'no special characters, only lowercase letters and numbers' }
-
   validates :unit_of_time,                                   numericality: { greater_than_or_equal_to: 1 }
   validates :customers_per_unit_of_time,                     numericality: { greater_than_or_equal_to: 1 }
-  validate :closing_time_bigger_than_oppening_time,          if: -> { self.opening_time.present? && self.closing_time.present? }
-  validate :closing_time_bigger_than_oppening_time_saturday, if: -> { self.opening_time_saturday.present? && self.closing_time_saturday.present? && !self.closed_saturday }
-  validate :closing_time_bigger_than_oppening_time_sunday,   if: -> { self.opening_time_sunday.present? && self.closing_time_sunday.present? && !self.closed_sunday }
+  validate :closing_time_bigger_than_oppening_time,          if: -> { opening_time.present? && closing_time.present? }
+  validate :closing_time_bigger_than_oppening_time_saturday, if: -> { opening_time_saturday.present? && closing_time_saturday.present? && !closed_saturday }
+  validate :closing_time_bigger_than_oppening_time_sunday,   if: -> { opening_time_sunday.present? && closing_time_sunday.present? && !closed_sunday }
 
   before_save :downcase_code
 
   def downcase_code
-    self.code.downcase!
+    code.downcase!
   end
 
   def closing_time_bigger_than_oppening_time
-    if self.closing_time <= self.opening_time
-      errors.add(:closing_time, "must be bigger than #{self.closing_time}")
-    end
+    return if closing_time > opening_time
+
+    errors.add(:closing_time, "must be bigger than #{closing_time}")
   end
 
   def closing_time_bigger_than_oppening_time_saturday
-    if self.closing_time_saturday <= self.opening_time_saturday
-      errors.add(:closing_time_saturday, "must be bigger than #{self.closing_time_saturday}")
-    end
+    return if closing_time_saturday > opening_time_saturday
+
+    errors.add(:closing_time_saturday, "must be bigger than #{closing_time_saturday}")
   end
 
   def closing_time_bigger_than_oppening_time_sunday
-    if self.closing_time_sunday <= self.opening_time_sunday
-      errors.add(:closing_time_sunday, "must be bigger than #{self.closing_time_sunday}")
-    end
+    return if closing_time_sunday > opening_time_sunday
+
+    errors.add(:closing_time_sunday, "must be bigger than #{closing_time_sunday}")
   end
 
   def available_reservation_times
@@ -68,42 +69,42 @@ class Company < ApplicationRecord
     return false if temporarily_closed
     return false if DateTime.now.saturday? && closed_saturday
     return false if DateTime.now.sunday? && closed_sunday
+
     true
   end
 
   def reservation_time_available?(desired_reservation_time)
     return false unless available_reservation_times.include?(hour_min(desired_reservation_time))
     return false if reservations.where(reservation_date: desired_reservation_time).count >= customers_per_unit_of_time
+
     true
   end
 
   def current_day_opening_time_closing_time
-    if DateTime.now.saturday?
-      return self.opening_time_saturday, self.closing_time_saturday
-    elsif DateTime.now.sunday?
-      return self.opening_time_sunday, self.closing_time_sunday
-    else
-      return self.opening_time, self.closing_time
-    end
+    return opening_time_saturday, closing_time_saturday if DateTime.now.saturday?
+    return opening_time_sunday, closing_time_sunday if DateTime.now.sunday?
+
+    [opening_time, closing_time]
   end
 
   def schedule
-    readable_schedule = ''
-    readable_schedule += "Monday - Friday: #{hour_min_am_pm(self.opening_time)} - #{hour_min_am_pm(self.closing_time)}. "
+    [weekday_schedule, saturday_schedule, sunday_schedule].join(' ')
+  end
 
-    if self.closed_saturday
-      readable_schedule += 'Saturday: Closed. '
-    else
-      readable_schedule += "Saturday: #{hour_min_am_pm(self.opening_time_saturday)} - #{hour_min_am_pm(self.closing_time_saturday)}. "
-    end
+  def weekday_schedule
+    "Monday - Friday: #{hour_min_am_pm(opening_time)} - #{hour_min_am_pm(closing_time)}."
+  end
 
-    if self.closed_sunday
-      readable_schedule += 'Sunday: Closed. '
-    else
-      readable_schedule += "Sunday: #{hour_min_am_pm(self.opening_time_sunday)} - #{hour_min_am_pm(self.closing_time_sunday)}. "
-    end
+  def saturday_schedule
+    return 'Saturday: Closed.' if closed_saturday
 
-    readable_schedule
+    "Saturday: #{hour_min_am_pm(opening_time_saturday)} - #{hour_min_am_pm(closing_time_saturday)}."
+  end
+
+  def sunday_schedule
+    return 'Sunday: Closed.' if closed_sunday
+
+    "Sunday: #{hour_min_am_pm(opening_time_sunday)} - #{hour_min_am_pm(closing_time_sunday)}."
   end
 
   def next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
@@ -125,11 +126,8 @@ class Company < ApplicationRecord
 
   def next_available_time_slots_to_s(desired_reservation_time, number_of_time_slots_available)
     next_n_available_time_slots = next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
+    return 'There are no more free spots for today.' if next_n_available_time_slots.empty?
 
-    if next_n_available_time_slots.empty?
-      'There are no more free spots for today.'
-    else
-      "Next #{next_n_available_time_slots.count} available spot(s) are: #{next_n_available_time_slots.join(', ')}."
-    end
+    "Next #{next_n_available_time_slots.count} available spot(s) are: #{next_n_available_time_slots.join(', ')}"
   end
 end
