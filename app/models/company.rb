@@ -108,10 +108,9 @@ class Company < ApplicationRecord
   end
 
   def next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
-    all_company_time_slots      = available_reservation_times
     next_n_available_time_slots = []
 
-    all_company_time_slots.each do |time_slot|
+    available_reservation_times.each do |time_slot|
       reservation_date = datetime_from_time(time_slot)
 
       break if next_n_available_time_slots.size >= number_of_time_slots_available

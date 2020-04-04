@@ -42,9 +42,9 @@ class Message
   def create_reservation
     reservation = Reservation.new(
       reservation_date: @reservation_date,
-      phone_number:     @sender,
-      company_id:       @company.id,
-      details:          additional_details
+      phone_number: @sender,
+      company_id: @company.id,
+      details: additional_details
     )
     return "Reservation created for #{@company.name} at #{hour_min_am_pm(@reservation_date)}. #{@company.reservation_message}" if reservation.save
 
