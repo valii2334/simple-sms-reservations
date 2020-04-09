@@ -10,6 +10,7 @@ FactoryBot.define do
     closed_saturday { true }
     closed_sunday { true }
     temporarily_closed { false }
+    temporarily_closed_message { 'Our main person left' }
     opening_time_saturday { DateTime.new(2012, 07, 14, 10, 0) }
     closing_time_saturday { DateTime.new(2012, 07, 14, 12, 0) }
     opening_time_sunday { DateTime.new(2012, 07, 15, 14, 0) }

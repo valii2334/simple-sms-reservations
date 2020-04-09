@@ -19,6 +19,7 @@ class Company < ApplicationRecord
   validates :opening_time_sunday,                            presence: true, if: -> { !closed_sunday }
   validates :closing_time_sunday,                            presence: true, if: -> { !closed_sunday }
   validates :temporarily_closed,                             inclusion: { in: [true, false] }
+  validates :temporarily_closed_message,                     presence: true, if: -> { temporarily_closed }
   validates :code,                                           uniqueness: true,
                                                              format: { with: /\A[a-z0-9.]+\z/,
                                                              message: 'no special characters, only lowercase letters and numbers' }
@@ -52,39 +53,39 @@ class Company < ApplicationRecord
     errors.add(:closing_time_sunday, "must be bigger than #{closing_time_sunday}")
   end
 
-  def available_reservation_times
-    time_slots            = []
-    open_time, close_time = current_day_opening_time_closing_time
-    hour                  = open_time
-
-    while (hour + unit_of_time.minutes) <= close_time
-      time_slots << hour_min(hour)
-      hour += unit_of_time.minutes
-    end
-
-    time_slots
-  end
-
-  def open_today?
+  def open?(reservation_date)
     return false if temporarily_closed
-    return false if DateTime.now.saturday? && closed_saturday
-    return false if DateTime.now.sunday? && closed_sunday
 
-    true
+    set_business_hours
+    reservation_date.during_business_hours?
   end
 
-  def reservation_time_available?(desired_reservation_time)
-    return false unless available_reservation_times.include?(hour_min(desired_reservation_time))
-    return false if reservations.where(reservation_date: desired_reservation_time).count >= customers_per_unit_of_time
+  def available_time_slots(reservation_date)
+    start_time, end_time = opening_time, closing_time if reservation_date.weekday?
+    start_time, end_time = opening_time_saturday, closing_time_saturday if reservation_date.saturday?
+    start_time, end_time = opening_time_sunday, closing_time_sunday if reservation_date.sunday?
 
-    true
+    start_time = start_time.change( { day: reservation_date.day, month: reservation_date.month, year: reservation_date.year })
+    end_time = end_time.change( { day: reservation_date.day, month: reservation_date.month, year: reservation_date.year })
+
+    Enumerator.new { |y| loop { y.yield start_time; start_time += unit_of_time.minutes } }.take_while { |d| d + unit_of_time.minutes <= end_time }
   end
 
-  def current_day_opening_time_closing_time
-    return opening_time_saturday, closing_time_saturday if DateTime.now.saturday?
-    return opening_time_sunday, closing_time_sunday if DateTime.now.sunday?
+  def next_available_time_slots(reservation_date)
+    all_available_time_slots = available_time_slots(reservation_date).select{ |available_time_slot| available_time_slot >= reservation_date }
+    all_available_time_slots.reject!{ |available_time_slot| !reservation_slot_still_available?(available_time_slot) }
+    all_available_time_slots
+  end
 
-    [opening_time, closing_time]
+  def next_available_time_slots_to_string(reservation_date, first_n_available_time_slots)
+    next_available_time_slots(reservation_date).first(first_n_available_time_slots).map{ |available_time_slot| hour_min_am_pm(available_time_slot) }.join(', ')
+  end
+
+  def reservation_slot_still_available?(reservation_date)
+    return false unless open?(reservation_date)
+
+    available_time_slots(reservation_date).include?(reservation_date) &&
+    reservations.where(reservation_date: reservation_date).count < customers_per_unit_of_time
   end
 
   def schedule
@@ -92,41 +93,46 @@ class Company < ApplicationRecord
   end
 
   def weekday_schedule
-    "Monday - Friday: #{hour_min_am_pm(opening_time)} - #{hour_min_am_pm(closing_time)}."
+    I18n.t 'company.weekday_schedule', opening_time: hour_min_am_pm(opening_time), closing_time: hour_min_am_pm(closing_time)
   end
 
   def saturday_schedule
-    return 'Saturday: Closed.' if closed_saturday
+    return I18n.t 'company.saturday_schedule_closed' if closed_saturday
 
-    "Saturday: #{hour_min_am_pm(opening_time_saturday)} - #{hour_min_am_pm(closing_time_saturday)}."
+    I18n.t 'company.saturday_schedule', opening_time: hour_min_am_pm(opening_time_saturday), closing_time: hour_min_am_pm(closing_time_saturday)
   end
 
   def sunday_schedule
-    return 'Sunday: Closed.' if closed_sunday
+    return I18n.t 'company.sunday_schedule_closed' if closed_sunday
 
-    "Sunday: #{hour_min_am_pm(opening_time_sunday)} - #{hour_min_am_pm(closing_time_sunday)}."
+    I18n.t 'company.sunday_schedule', opening_time: hour_min_am_pm(opening_time_sunday), closing_time: hour_min_am_pm(closing_time_sunday)
   end
 
-  def next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
-    next_n_available_time_slots = []
+  private
 
-    available_reservation_times.each do |time_slot|
-      reservation_date = datetime_from_time(time_slot)
-
-      break if next_n_available_time_slots.size >= number_of_time_slots_available
-      next if reservation_date < desired_reservation_time
-      next unless reservation_time_available?(reservation_date)
-
-      next_n_available_time_slots << time_slot
-    end
-
-    next_n_available_time_slots
+  def set_business_hours
+    BusinessTime::Config.work_hours = {
+      mon: weekday_working_schedule,
+      tue: weekday_working_schedule,
+      wed: weekday_working_schedule,
+      thu: weekday_working_schedule,
+      fri: weekday_working_schedule,
+      sat: saturday_working_schedule,
+      sun: sunday_working_schedule
+    }
   end
 
-  def next_available_time_slots_to_s(desired_reservation_time, number_of_time_slots_available)
-    next_n_available_time_slots = next_available_time_slots(desired_reservation_time, number_of_time_slots_available)
-    return 'There are no more free spots for today.' if next_n_available_time_slots.empty?
+  def saturday_working_schedule
+    return [opening_time_saturday.strftime('%H:%M'), closing_time_saturday.strftime('%H:%M')] unless closed_saturday
+    ['00:00', '00:00']
+  end
 
-    "Next #{next_n_available_time_slots.count} available spot(s) are: #{next_n_available_time_slots.join(', ')}"
+  def sunday_working_schedule
+    return [opening_time_sunday.strftime('%H:%M'), closing_time_sunday.strftime('%H:%M')] unless closed_sunday
+    ['00:00', '00:00']
+  end
+
+  def weekday_working_schedule
+    [opening_time.strftime('%H:%M'), closing_time.strftime('%H:%M')]
   end
 end

@@ -7,8 +7,6 @@ class ApplicationController < ActionController::Base
   def home
     if current_user
       signed_in
-    else
-      redirect_to new_user_session_path
     end
   end
 

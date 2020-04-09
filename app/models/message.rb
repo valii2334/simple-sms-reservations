@@ -16,19 +16,22 @@ class Message
     @sender = sender
     @text   = text
     @company_code, @reservation_date, @additional_details = process_text
+    set_locale
   end
 
   def perform
-    return 'Message format is not valid. Message example: CompanyCode 14:00' if @company_code.nil? || @reservation_date.nil?
-    return 'Company was not found. Message example: CompanyCode 14:00'       if company_from_company_code.nil?
+    return I18n.t 'message.wrong_format' if @company_code.nil? || @reservation_date.nil?
+    return I18n.t 'message.company_not_found' if company_from_company_code.nil?
 
     create_reservation
   end
 
   def process_text
     store_code         = @text.split(' ')[0]
-    reservation_date   = datetime_from_time(@text.split(' ')[1])
-    additional_details = @text.split(' ').drop(2).join(' ')
+    date_text          = @text.split(' ')[1]
+    time_text          = @text.split(' ')[2]
+    reservation_date   = datetime_from_text(date_text, time_text)
+    additional_details = @text.split(' ').drop(3).join(' ')
 
     [store_code, reservation_date, additional_details]
   rescue
@@ -46,8 +49,22 @@ class Message
       company_id: @company.id,
       details: additional_details
     )
-    return "Reservation created for #{@company.name} at #{hour_min_am_pm(@reservation_date)}. #{@company.reservation_message}" if reservation.save
 
-    reservation.errors.full_messages.join('.')
+    if reservation.save
+      I18n.t 'reservation.created',
+             company_name: @company.name,
+             reservation_date: @reservation_date.strftime('%H:%M %p'),
+             reservation_message: @company.reservation_message
+    else
+      reservation.errors.full_messages.join('.')
+    end
+  end
+
+  def set_locale
+    if Phonelib.parse(@sender).country == 'RO'
+      I18n.default_locale = :ro
+    else
+      I18n.default_locale = :en
+    end
   end
 end

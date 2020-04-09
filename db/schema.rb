@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_28_151416) do
+ActiveRecord::Schema.define(version: 2020_04_08_194756) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,14 +25,15 @@ ActiveRecord::Schema.define(version: 2020_03_28_151416) do
     t.boolean "closed_saturday", default: true, null: false
     t.boolean "closed_sunday", default: true, null: false
     t.boolean "temporarily_closed", default: false
-    t.datetime "opening_time"
-    t.datetime "closing_time"
+    t.datetime "opening_time", null: false
+    t.datetime "closing_time", null: false
     t.integer "user_id"
     t.datetime "opening_time_saturday"
     t.datetime "closing_time_saturday"
     t.datetime "opening_time_sunday"
     t.datetime "closing_time_sunday"
     t.string "reservation_message"
+    t.string "temporarily_closed_message"
     t.index ["code"], name: "index_companies_on_code", unique: true
     t.index ["name"], name: "index_companies_on_name", unique: true
   end

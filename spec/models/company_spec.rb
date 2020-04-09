@@ -154,181 +154,126 @@ RSpec.describe Company, type: :model do
   # Methods
   ##################################
 
-  describe 'weekday' do
-    before do
-      Timecop.freeze(DateTime.new(2012, 07, 11))
-    end
-
-    after do
-      Timecop.return
-    end
-
-    context '#available_reservation_times' do
-      it 'returns available reservation times between 09:00 and 10:00' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 10, 0)
-
-        expect(company.available_reservation_times).to eql(
-          [
-            DateTime.new(2012, 07, 11, 9, 0).strftime('%H:%M'),
-            DateTime.new(2012, 07, 11, 9, 15).strftime('%H:%M'),
-            DateTime.new(2012, 07, 11, 9, 30).strftime('%H:%M'),
-            DateTime.new(2012, 07, 11, 9, 45).strftime('%H:%M')
-          ]
-        )
-      end
-
-      it 'returns available reservation times between 09:02 and 9:30' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 02)
-        company.closing_time = DateTime.new(2012, 07, 11, 9, 30)
-
-        expect(company.available_reservation_times).to eql(
-          [
-            DateTime.new(2012, 07, 11, 9, 02, 0).strftime('%H:%M')
-          ]
-        )
-      end
-    end
-
-    context '#open_today?' do
-      it 'returns true if not temporarily_closed' do
-        company.temporarily_closed = false
-
-        expect(company.open_today?).to eql(true)
-      end
-
-      it 'returns false if temporarily_closed' do
+  describe '#open' do
+    context 'weekday' do
+      it 'returns false if temporarily_closed and between working hours' do
         company.temporarily_closed = true
 
-        expect(company.open_today?).to eql(false)
+        expect(company.open?(DateTime.new(2020,4,17,9,0))).to eql(false)
+      end
+
+      it 'returns false if not between working hours' do
+        expect(company.open?(DateTime.new(2020,4,17,11,0))).to eql(false)
+      end
+
+      it 'returns true if between working hours' do
+        expect(company.open?(DateTime.new(2020,4,17,9,0))).to eql(true)
+        expect(company.open?(DateTime.new(2020,4,17,10,0))).to eql(true)
       end
     end
 
-    describe '#reservation_time_available?' do
-      it 'returns false if invalid time is provided' do
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 9, 10))).to eql(false)
-      end
-
-      it 'returns true if valid time is provided' do
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 9, 0))).to eql(true)
-      end
-
-      it 'returns false if all time slots at 9:00 are occupied' do
-        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
-        create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
-        create :reservation, company: company, phone_number: '0123456783', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
-
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 9, 00, 0))).to eql(false)
-      end
-
-      it 'returns true if one time slots at 9:00 is available' do
-        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
-        create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 0)
-
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 9, 0))).to eql(true)
-      end
-    end
-
-    context '#schedule' do
-      it 'closed weekend' do
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 02)
-        company.closing_time = DateTime.new(2012, 07, 11, 9, 30)
-
-        expect(company.schedule).to eql('Monday - Friday: 09:02 AM - 09:30 AM. Saturday: Closed. Sunday: Closed. ')
-      end
-
-      it 'open on weekend' do
+    context 'Saturday' do
+      it 'returns false if temporarily_closed and between working hours' do
+        company.temporarily_closed = true
         company.closed_saturday = false
+
+        expect(company.open?(DateTime.new(2020,4,18,10,0))).to eql(false)
+      end
+
+      it 'returns false if not between working hours' do
+        company.closed_saturday = false
+
+        expect(company.open?(DateTime.new(2020,4,18,9,0))).to eql(false)
+      end
+
+      it 'returns true if between working hours' do
+        company.closed_saturday = false
+
+        expect(company.open?(DateTime.new(2020,4,18,10,0))).to eql(true)
+        expect(company.open?(DateTime.new(2020,4,18,12,0))).to eql(true)
+      end
+    end
+
+    context 'Sunday' do
+      it 'returns false if temporarily_closed and between working hours' do
+        company.temporarily_closed = true
         company.closed_sunday = false
 
-        expect(company.schedule).to eql('Monday - Friday: 09:00 AM - 10:00 AM. Saturday: 10:00 AM - 12:00 PM. Sunday: 14:00 PM - 16:00 PM. ')
-      end
-    end
-
-    describe '#next_available_time_slots' do
-      it 'returns next 3 available time slots 09:12, 09:17, 09:22' do
-        company.customers_per_unit_of_time = 1
-        company.unit_of_time = 5
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 02)
-        company.closing_time = DateTime.new(2012, 07, 11, 9, 30)
-
-        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 02)
-        create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 07)
-
-        expect(company.next_available_time_slots(DateTime.new(2012, 07, 11, 9, 02), 3)).to eql(['09:12', '09:17', '09:22'])
+        expect(company.open?(DateTime.new(2020,4,19,14,0))).to eql(false)
       end
 
-      it 'returns next 2 available time slots 09:12, 09:17' do
-        company.customers_per_unit_of_time = 1
-        company.unit_of_time = 5
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 02)
-        company.closing_time = DateTime.new(2012, 07, 11, 9, 30)
+      it 'returns false if not between working hours' do
+        company.closed_sunday = false
 
-        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 02)
-        create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 07)
-
-        expect(company.next_available_time_slots(DateTime.new(2012, 07, 11, 9, 02), 2)).to eql(['09:12', '09:17'])
+        expect(company.open?(DateTime.new(2020,4,19,13,0))).to eql(false)
       end
 
-      it 'returns next 2 available time slots 09:12, 09:22' do
-        company.customers_per_unit_of_time = 1
-        company.unit_of_time = 5
-        company.opening_time = DateTime.new(2012, 07, 11, 9, 02)
-        company.closing_time = DateTime.new(2012, 07, 11, 9, 30)
+      it 'returns true if between working hours' do
+        company.closed_sunday = false
 
-        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 9, 02)
-        create :reservation, company: company, phone_number: '0123456782', reservation_date: DateTime.new(2012, 07, 11, 9, 07)
-        create :reservation, company: company, phone_number: '0123456783', reservation_date: DateTime.new(2012, 07, 11, 9, 17)
-
-        expect(company.next_available_time_slots(DateTime.new(2012, 07, 11, 9, 02), 2)).to eql(['09:12', '09:22'])
-      end
-
-      it 'returns next 2 available time slots 05:05, 05:10' do
-        company.customers_per_unit_of_time = 1
-        company.unit_of_time = 5
-        company.opening_time = DateTime.new(2012, 07, 11, 01, 0)
-        company.closing_time = DateTime.new(2012, 07, 11, 06, 0)
-
-        create :reservation, company: company, phone_number: '0123456781', reservation_date: DateTime.new(2012, 07, 11, 5, 0)
-
-        expect(company.next_available_time_slots(DateTime.new(2012, 07, 11, 5, 0), 2)).to eql(['05:05', '05:10'])
+        expect(company.open?(DateTime.new(2020,4,19,14,0))).to eql(true)
+        expect(company.open?(DateTime.new(2020,4,19,16,0))).to eql(true)
       end
     end
   end
 
-  describe 'saturday' do
-    before do
-      Timecop.freeze(DateTime.new(2012, 07, 14))
+  context '#reservation_slot_still_available?' do
+    it 'returns false if not open' do
+      company.temporarily_closed = true
+
+      expect(company.reservation_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(false)
     end
 
-    after do
-      Timecop.return
+    it 'returns false if all reservations slots are occupied' do
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567891'
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567892'
+
+      expect(company.reservation_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(false)
     end
 
-    context 'reservation_time_available saturday' do
-      it 'returns true if valid time is provided' do
-        company.closed_saturday = false
+    it 'returns true if one spot is still available' do
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567891'
 
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 10, 0))).to eql(true)
-      end
+      expect(company.reservation_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(true)
     end
   end
 
-  describe 'sunday' do
-    before do
-      Timecop.freeze(DateTime.new(2012, 07, 15))
+  context '#available_time_slots' do
+    it 'returns all the time slots between the two dates' do
+      expect(company.available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
+        DateTime.new(2020,4,17,9,0).in_time_zone,
+        DateTime.new(2020,4,17,9,15).in_time_zone,
+        DateTime.new(2020,4,17,9,30).in_time_zone,
+        DateTime.new(2020,4,17,9,45).in_time_zone
+      ])
     end
+  end
 
-    after do
-      Timecop.return
-    end
+  context '#next_available_time_slots' do
+    it 'returns all available time slots' do
+      company.customers_per_unit_of_time = 1
 
-    context 'reservation_time_available sunday' do
-      it 'returns true if valid time is provided' do
-        company.closed_sunday = false
+      expect(company.next_available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
+        DateTime.new(2020,4,17,9,0).in_time_zone,
+        DateTime.new(2020,4,17,9,15).in_time_zone,
+        DateTime.new(2020,4,17,9,30).in_time_zone,
+        DateTime.new(2020,4,17,9,45).in_time_zone
+      ])
 
-        expect(company.reservation_time_available?(DateTime.new(2012, 07, 11, 14, 0))).to eql(true)
-      end
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,30), phone_number: '1234567891'
+
+      expect(company.next_available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
+        DateTime.new(2020,4,17,9,15).in_time_zone,
+        DateTime.new(2020,4,17,9,45).in_time_zone
+      ])
+
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,15), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,45), phone_number: '1234567891'
+
+      expect(company.next_available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([])
     end
   end
 end

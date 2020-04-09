@@ -1,6 +1,6 @@
 module TimeUtils
-  def datetime_from_time(time)
-    DateTime.now.in_time_zone.beginning_of_day.change({hour: time.to_datetime.hour, min: time.to_datetime.min})
+  def datetime_from_text(date_text, time_text)
+    [date_text, time_text].join(' ').to_datetime.in_time_zone
   end
 
   def hour_min(date_time)

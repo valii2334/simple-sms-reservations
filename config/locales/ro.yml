@@ -1,4 +1,4 @@
-en:
+ro:
   message:
     wrong_format: "Message format is not valid. Example: CompanyCode 09/12 14:00"
     company_not_found: "Company code is was wrong."
