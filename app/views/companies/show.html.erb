@@ -24,13 +24,13 @@
               <%= index + 1 %>
             </th>
             <td>
-              <%= "**** *** #{reservation.phone_number.chars.last(3).join}" %>
+              <%=  Phonelib.parse(reservation.phone_number).full_international %>
             </td>
             <td>
-              <%= reservation.reservation_date.strftime('%H:%M') %>
+              <%= reservation.reservation_date.strftime('%H:%M %p') %>
             </td>
             <td>
-              <%= (reservation.reservation_date + @company.unit_of_time.minutes).strftime('%H:%M') %>
+              <%= (reservation.reservation_date + @company.unit_of_time.minutes).strftime('%H:%M %p') %>
             </td>
             <td>
               <%= reservation.details %>
