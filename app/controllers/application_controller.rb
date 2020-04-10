@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
     if current_user
       signed_in
     end
+
+    render 'home', layout: 'home'
   end
 
   def signed_in
