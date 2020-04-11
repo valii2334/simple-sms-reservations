@@ -26,7 +26,7 @@
   <nav class="navbar navbar-light bg-light static-top">
     <div class="container">
       <a class="navbar-brand" href="#"><%= t 'landing_page.title' %></a>
-      <a class="btn btn-primary" href="#"><%= t 'landing_page.sign_in' %></a>
+      <a class="btn btn-primary" href="<%= new_user_session_path %>"><%= t 'landing_page.sign_in' %></a>
     </div>
   </nav>
 
@@ -42,7 +42,7 @@
           <form>
             <div class="form-row">
               <div class="col-sm-4 offset-sm-4">
-                <button type="submit" class="btn btn-block btn-lg btn-primary"><%= t 'landing_page.sign_up' %></button>
+                <a class="btn btn-primary btn-block btn-lg" href="<%= new_user_registration_path %>"><%= t 'landing_page.sign_up' %></a>
               </div>
             </div>
           </form>
@@ -142,7 +142,7 @@
           <form>
             <div class="form-row">
               <div class="col-sm-4 offset-sm-4">
-                <button type="submit" class="btn btn-block btn-lg btn-primary"><%= t 'landing_page.sign_up' %></button>
+                <a class="btn btn-primary btn-block btn-lg" href="<%= new_user_registration_path %>"><%= t 'landing_page.sign_up' %></a>
               </div>
             </div>
           </form>

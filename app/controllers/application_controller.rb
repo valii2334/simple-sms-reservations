@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
   def home
     if current_user
       signed_in
+    else
+      render 'home', layout: 'home'
     end
-
-    render 'home', layout: 'home'
   end
 
   def signed_in
