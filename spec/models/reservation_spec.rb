@@ -9,7 +9,7 @@ RSpec.describe Reservation, type: :model do
       reservation = build :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,15), phone_number: '1234567890'
 
       expect(reservation).to_not be_valid
-      expect(reservation.errors.full_messages.join('')).to include('is temporarily closed')
+      expect(reservation.errors.full_messages.join('')).to eql(I18n.t('reservation.temporarily_closed', company_name: company.name, company_temporarily_closed_message: company.temporarily_closed_message))
     end
   end
 
@@ -18,7 +18,7 @@ RSpec.describe Reservation, type: :model do
       reservation = build :reservation, company: company, reservation_date: DateTime.new(2020,4,17,8,0), phone_number: '1234567890'
 
       expect(reservation).to_not be_valid
-      expect(reservation.errors.full_messages.join('')).to include('your reservation date is not between our business hours')
+      expect(reservation.errors.full_messages.join('')).to eql(I18n.t('reservation.out_of_business_hour', company_name: company.name, company_schedule: company.schedule))
     end
 
     it 'can create a reservation if between business hours' do
@@ -36,7 +36,7 @@ RSpec.describe Reservation, type: :model do
       reservation1 = build :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
 
       expect(reservation1).to_not be_valid
-      expect(reservation1.errors.full_messages.join('')).to include('you can not make a reservation at this time')
+      expect(reservation1.errors.full_messages.join('')).to eql(I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.next_available_time_slots_to_string(DateTime.new(2020,4,17,9,0), 3)))
     end
   end
 end
