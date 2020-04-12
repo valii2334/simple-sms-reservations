@@ -21,7 +21,6 @@ RSpec.describe Message, type: :model do
 
       it 'returns Message format is not valid. if not a valid format is sent' do
         message = Message.new('0040742359342', 'Some random text')
-        binding.pry
         expect(message.perform).to eql(I18n.t 'message.wrong_format')
       end
 
