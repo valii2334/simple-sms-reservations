@@ -3,12 +3,11 @@ class MessagesController < ActionController::Base
     received_params = params.merge(parsed_body)
 
     message = Message.new(received_params['msisdn'], received_params['text'])
-    text_to_send = message.perform
 
     client.sms.send(
       from: ENV['NEXMO_NUMBER'],
       to: message.sender,
-      text: text_to_send
+      text: message.perform
     )
 
     render json: { status: 200, text: 'inbound' }
@@ -26,9 +25,6 @@ class MessagesController < ActionController::Base
         body: message.perform
       )
     end
-
-    puts "Text to send is : #{message.perform}"
-    puts "Twilio log is: #{twiml.to_s}"
 
     render xml: twiml.to_s
   end
