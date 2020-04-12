@@ -99,13 +99,13 @@ class Company < ApplicationRecord
   def saturday_schedule
     return I18n.t 'company.saturday_schedule_closed' if closed_saturday
 
-    I18n.t 'company.saturday_schedule', opening_time: hour_min_am_pm(opening_time_saturday), closing_time: hour_min_am_pm(closing_time_saturday)
+    I18n.t 'company.saturday_schedule_open', opening_time: hour_min_am_pm(opening_time_saturday), closing_time: hour_min_am_pm(closing_time_saturday)
   end
 
   def sunday_schedule
     return I18n.t 'company.sunday_schedule_closed' if closed_sunday
 
-    I18n.t 'company.sunday_schedule', opening_time: hour_min_am_pm(opening_time_sunday), closing_time: hour_min_am_pm(closing_time_sunday)
+    I18n.t 'company.sunday_schedule_open', opening_time: hour_min_am_pm(opening_time_sunday), closing_time: hour_min_am_pm(closing_time_sunday)
   end
 
   private
@@ -123,16 +123,16 @@ class Company < ApplicationRecord
   end
 
   def saturday_working_schedule
-    return [opening_time_saturday.strftime('%H:%M'), closing_time_saturday.strftime('%H:%M')] unless closed_saturday
-    ['00:00', '00:00']
+    return [opening_time_saturday.strftime('%H:%M %p'), closing_time_saturday.strftime('%H:%M %p')] unless closed_saturday
+    ['00:00 AM', '00:00 AM']
   end
 
   def sunday_working_schedule
-    return [opening_time_sunday.strftime('%H:%M'), closing_time_sunday.strftime('%H:%M')] unless closed_sunday
-    ['00:00', '00:00']
+    return [opening_time_sunday.strftime('%H:%M %p'), closing_time_sunday.strftime('%H:%M %p')] unless closed_sunday
+    ['00:00 AM', '00:00 AM']
   end
 
   def weekday_working_schedule
-    [opening_time.strftime('%H:%M'), closing_time.strftime('%H:%M')]
+    [opening_time.strftime('%H:%M %p'), closing_time.strftime('%H:%M %p')]
   end
 end
