@@ -1,15 +1,15 @@
 ro:
   message:
-    wrong_format: "Message format is not valid. Example: CompanyCode 09/12 14:00"
-    company_not_found: "Company code is was wrong."
+    wrong_format: "Mesajul dumneavoastra este invalid. Examplu: CodulCompaniei 09/12 14:00"
+    company_not_found: "Codul companiei pe care l-ati intruodus este invalid"
   reservation:
-    temporarily_closed: "%{company_name} is temporarily closed. %{company_temporarily_closed_message}"
-    out_of_business_hour: "%{company_name}: your reservation date is not between our business hours. Our schedule is %{company_schedule}"
-    reservation_slot_still_available: "%{company_name}: you can not make a reservation at this time. Next 3 available time slots are: %{next_slots}."
-    created: "Reservation for %{company_name} at %{reservation_date} was successfuly created. %{reservation_message}."
+    temporarily_closed: "%{company_name} nu mai accepta rezervati prin SMS. %{company_temporarily_closed_message}"
+    out_of_business_hour: "%{company_name} nu este disponibila la aceasta ora. Programul este %{company_schedule}"
+    reservation_slot_still_available: "%{company_name} data si ora selectate nu mai sunt disponibile. Urmatoarele 3 optiuni libere sunt: %{next_slots}."
+    created: "%{company_name} rezervarea pentru %{reservation_date} a fost creata cu success. %{reservation_message}"
   company:
-    weekday_schedule: "Monday - Friday: %{opening_time} - %{closing_time}."
-    saturday_schedule_open: "Saturday: %{opening_time} - %{closing_time}."
-    saturday_schedule_closed: "Saturday: Closed."
-    sunday_schedule_open: "Sunday: %{opening_time} - %{closing_time}."
-    sunday_schedule_closed: "Sunday: Closed."
+    weekday_schedule: "Luni - Vineri: %{opening_time} - %{closing_time}."
+    saturday_schedule_open: "Sambata: %{opening_time} - %{closing_time}."
+    saturday_schedule_closed: "Sambata: Inchis."
+    sunday_schedule_open: "Duminica: %{opening_time} - %{closing_time}."
+    sunday_schedule_closed: "Duminica: Inchis."

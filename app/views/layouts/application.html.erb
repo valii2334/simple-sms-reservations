@@ -23,7 +23,7 @@
       <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
         <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<%= root_path %>">
           <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
           </div>
@@ -41,7 +41,7 @@
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-calendar"></i>
             <span>View Reservations</span>
           </a>
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -65,12 +65,22 @@
               <% current_user.companies.each do |company| %>
                 <%= link_to company.name, edit_company_path(company), class: 'collapse-item' %>
               <% end %>
+              <%= link_to "Add new company", new_company_path, class: 'collapse-item' %>
             </div>
           </div>
         </li>
         <!-- Divider -->
         <hr class="sidebar-divider d-none d-md-block">
 
+        <div class="sidebar-heading">
+          Help
+        </div>
+
+        <li class="nav-item">
+          <a class="nav-link" href="<%= how_it_works_details_path %>">
+            <i class="fas fa-fw fa-question"></i>
+            <span>How it works ?</span></a>
+        </li>
       </ul>
       <!-- End of Sidebar -->
 
@@ -122,7 +132,7 @@
         <footer class="sticky-footer bg-white">
           <div class="container my-auto">
             <div class="copyright text-center my-auto">
-              <span>Copyright &copy; VLZ DevOps 2020</span>
+              <span>Copyright &copy; Easy SMS Reservations 2020</span>
             </div>
           </div>
         </footer>

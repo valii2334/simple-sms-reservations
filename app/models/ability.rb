@@ -7,5 +7,6 @@ class Ability
     user ||= User.new
 
     can :manage, Company, user_id: user.id
+    can :create, Company
   end
 end

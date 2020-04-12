@@ -5,9 +5,11 @@
 <% else %>
   <% @company.reservations.group_by { |reservation| reservation.created_at.to_date }.each do |date, reservations| %>
     <h5 style="margin: 20px;">
-      <%= date.strftime('%d %B %Y') %>
+      <b>
+        <%= date.strftime('%d %B %Y') %>
+      </b>
     </h5>
-    <table class="table" style="margin-top: 20px;">
+    <table class="table table-striped" style="margin-top: 20px;">
       <thead>
         <tr>
           <th scope="col">#</th>
