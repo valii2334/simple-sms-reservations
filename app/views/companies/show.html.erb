@@ -4,42 +4,46 @@
   </h5>
 <% else %>
   <% @company.reservations.group_by { |reservation| reservation.created_at.to_date }.each do |date, reservations| %>
-    <h5 style="margin: 20px;">
-      <b>
-        <%= date.strftime('%d %B %Y') %>
-      </b>
-    </h5>
-    <table class="table table-striped" style="margin-top: 20px;">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Phone number</th>
-          <th scope="col">Start time</th>
-          <th scope="col">End time</th>
-          <th scope="col">Additional details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% reservations.sort_by { |reservation| reservation.reservation_date }.each_with_index do |reservation, index| %>
-          <tr>
-            <th scope="row">
-              <%= index + 1 %>
-            </th>
-            <td>
-              <%=  Phonelib.parse(reservation.phone_number).full_international %>
-            </td>
-            <td>
-              <%= reservation.reservation_date.strftime('%H:%M %p') %>
-            </td>
-            <td>
-              <%= (reservation.reservation_date + @company.unit_of_time.minutes).strftime('%H:%M %p') %>
-            </td>
-            <td>
-              <%= reservation.details %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header">
+        <b>
+          <%= date.strftime('%d %B %Y') %>
+        </b>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped" style="margin-top: 20px;">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Phone number</th>
+              <th scope="col">From</th>
+              <th scope="col">To</th>
+              <th scope="col">Additional details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% reservations.sort_by { |reservation| reservation.reservation_date }.each_with_index do |reservation, index| %>
+              <tr>
+                <th scope="row">
+                  <%= index + 1 %>
+                </th>
+                <td>
+                  <%=  Phonelib.parse(reservation.phone_number).full_international %>
+                </td>
+                <td>
+                  <%= reservation.reservation_date.strftime('%H:%M %p') %>
+                </td>
+                <td>
+                  <%= (reservation.reservation_date + @company.unit_of_time.minutes).strftime('%H:%M %p') %>
+                </td>
+                <td>
+                  <%= reservation.details %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   <% end %>
 <% end %>
