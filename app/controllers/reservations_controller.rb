@@ -11,7 +11,7 @@ class ReservationsController < ApplicationController
     if @reservation.destroy
       client.messages.create(
         from: ENV['TWILIO_NUMBER'],
-        to: @reservation.phone_number,
+        to: '+' + @reservation.phone_number,
         body: I18n.t('reservation.canceled',
                      company_name: @reservation.company.name,
                      reservation_date: @reservation.reservation_date.strftime('%d %B, %H:%M %p'),
