@@ -1,6 +1,6 @@
 en:
   message:
-    wrong_format: "Message format is not valid. Example: CompanyCode 09/12 14:00"
+    wrong_format: "Message format is not valid. Example: CompanyCode DD/MM HH:MM"
     company_not_found: "Company code is not valid"
   reservation:
     temporarily_closed: "%{company_name} is no longer accepting reservations via SMS. %{company_temporarily_closed_message}"

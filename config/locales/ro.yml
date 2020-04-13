@@ -1,6 +1,6 @@
 ro:
   message:
-    wrong_format: "Mesajul dumneavoastra este invalid. Examplu: CodulCompaniei 09/12 14:00"
+    wrong_format: "Mesajul dumneavoastra este invalid. Examplu: CodulCompaniei ZZ/LL HH:MM"
     company_not_found: "Codul companiei pe care l-ati intruodus este invalid"
   reservation:
     temporarily_closed: "%{company_name} nu mai accepta rezervati prin SMS. %{company_temporarily_closed_message}"
