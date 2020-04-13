@@ -3,7 +3,7 @@
     You don't have any reservations yet !
   </h5>
 <% else %>
-  <% @company.reservations.group_by { |reservation| reservation.created_at.to_date }.each do |date, reservations| %>
+  <% @company.reservations.group_by { |reservation| reservation.reservation_date.to_date }.each do |date, reservations| %>
     <div class="card" style="margin-top: 20px;">
       <div class="card-header">
         <b>
