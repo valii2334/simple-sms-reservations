@@ -6,20 +6,21 @@ class ReservationsController < ApplicationController
   load_and_authorize_resource
 
   def destroy
-    duped_reservation = @reservation.dup
-    company = @reservation.company
+    set_locale
 
     if @reservation.destroy
       client.messages.create(
         from: ENV['TWILIO_NUMBER'],
-        to: duped_reservation.phone_number,
-        body: "#{company.name} reservation from
-               #{duped_reservation.reservation_date.strftime('%d %B, %H:%M %p')}
-               was cancelled with the following message: #{params[:duped_reservation]}"
+        to: @reservation.phone_number,
+        body: I18n.t('reservation.canceled',
+                     company_name: @reservation.company.name,
+                     reservation_date: @reservation.reservation_date.strftime('%d %B, %H:%M %p'),
+                     cancel_message: params[:cancel_reservation_message]
+                    )
       )
     end
 
-    redirect_to company_path(id: company_id)
+    redirect_to company_path(id: @reservation.company_id)
   end
 
   private
@@ -28,7 +29,15 @@ class ReservationsController < ApplicationController
     @reservation = Reservation.find(params[:id])
   end
 
+  def set_locale
+    if Phonelib.parse(@reservation.phone_number).country == 'RO'
+      I18n.default_locale = :ro
+    else
+      I18n.default_locale = :en
+    end
+  end
+
   def client
-    Twilio::REST::Client.new ENV['ACd2e04b1473ad8ed895b9f98ba38e46dc'], ENV['f9f789def220dc9c0e6d651afe67fed1']
+    Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
   end
 end

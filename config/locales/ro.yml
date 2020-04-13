@@ -7,6 +7,7 @@ ro:
     out_of_business_hour: "%{company_name} nu este disponibila la aceasta ora. Programul este %{company_schedule}"
     reservation_slot_still_available: "%{company_name} data si ora selectate nu mai sunt disponibile. Urmatoarele 3 optiuni libere sunt: %{next_slots}."
     created: "%{company_name} rezervarea pentru %{reservation_date} a fost creata cu success. %{reservation_message}"
+    canceled: "%{company_name} rezervarea de la %{reservation_date} a fost anulata cu urmatorul mesaj: %{cancel_message}"
   company:
     weekday_schedule: "Luni - Vineri: %{opening_time} - %{closing_time}."
     saturday_schedule_open: "Sambata: %{opening_time} - %{closing_time}."
