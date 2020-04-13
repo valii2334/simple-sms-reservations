@@ -14,31 +14,60 @@
         <table class="table table-striped" style="margin-top: 20px;">
           <thead class="thead-dark">
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Phone number</th>
-              <th scope="col">From</th>
-              <th scope="col">To</th>
-              <th scope="col">Additional details</th>
+              <th scope="col" style="text-align: center;">#</th>
+              <th scope="col" style="text-align: center;">Phone number</th>
+              <th scope="col" style="text-align: center;">From</th>
+              <th scope="col" style="text-align: center;">To</th>
+              <th scope="col" style="text-align: center;">Additional details</th>
+              <th scope="col" style="text-align: center;">Actions</th>
             </tr>
           </thead>
           <tbody>
             <% reservations.sort_by { |reservation| reservation.reservation_date }.each_with_index do |reservation, index| %>
               <tr>
-                <th scope="row">
+                <td style="text-align: center;">
                   <%= index + 1 %>
-                </th>
-                <td>
+                </td>
+                <td style="text-align: center;">
                   <%=  Phonelib.parse(reservation.phone_number).full_international %>
                 </td>
-                <td>
+                <td style="text-align: center;">
                   <%= reservation.reservation_date.strftime('%H:%M %p') %>
                 </td>
-                <td>
+                <td style="text-align: center;">
                   <%= (reservation.reservation_date + @company.unit_of_time.minutes).strftime('%H:%M %p') %>
                 </td>
-                <td>
+                <td style="text-align: center;">
                   <%= reservation.details %>
                 </td>
+                <td style="text-align: center;">
+                  <a href="#" data-toggle="modal" data-target="#cancel_reservation_<%= reservation.id %>" class="btn btn-sm btn-outline-danger">
+                    Cancel
+                  </a>
+                </td>
+
+                <div class="modal fade" id="cancel_reservation_<%= reservation.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Do you want to cancel this reservation ?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <%= form_for(reservation, url: reservation_path(reservation), html: { method: :delete } ) do |f| %>
+                          <div class="form-group">
+                            <input id="cancel_reservation_message" name="cancel_reservation_message" type="text" autofocus="true" autocomplete="email" class='form-control form-control-user' placeholder="Message to send"/>
+                          </div>
+                          <%= f.submit "Cancel reservation", class: 'btn btn-block btn-danger' %>
+                          <hr>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </tr>
             <% end %>
           </tbody>

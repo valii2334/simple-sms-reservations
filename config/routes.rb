@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :reservations, only: [:destroy]
+
   resources :details do
     collection do
       get :how_it_works

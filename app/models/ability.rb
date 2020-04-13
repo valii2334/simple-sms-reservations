@@ -8,5 +8,7 @@ class Ability
 
     can :manage, Company, user_id: user.id
     can :create, Company
+
+    can :destroy, Reservation, company: { user_id: user.id }
   end
 end
