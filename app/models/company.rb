@@ -56,10 +56,6 @@ class Company < ApplicationRecord
   def open?(reservation_date)
     return false if temporarily_closed
 
-    puts "Reservation date is ===================="
-    puts reservation_date
-    puts "========================================"
-    
     set_business_hours
     reservation_date.during_business_hours?
   end
