@@ -1,4 +1,6 @@
 class ReservationsController < ApplicationController
+  include TimeUtils
+
   protect_from_forgery with: :exception
   before_action :authenticate_user!
   before_action :set_reservation
@@ -11,10 +13,10 @@ class ReservationsController < ApplicationController
     if @reservation.destroy
       client.messages.create(
         from: ENV['TWILIO_NUMBER'],
-        to: '+' + @reservation.phone_number,
+        to: "+#{@reservation.phone_number}",
         body: I18n.t('reservation.canceled',
                      company_name: @reservation.company.name,
-                     reservation_date: @reservation.reservation_date.strftime('%d %B, %H:%M %p'),
+                     reservation_date: day_month_hour_min_am_pm(@reservation.reservation_date),
                      cancel_message: params[:cancel_reservation_message]
                     )
       )
@@ -30,7 +32,8 @@ class ReservationsController < ApplicationController
   end
 
   def set_locale
-    if Phonelib.parse(@reservation.phone_number).country == 'RO'
+    case Phonelib.parse(@reservation.phone_number).country
+    when 'RO'
       I18n.default_locale = :ro
     else
       I18n.default_locale = :en

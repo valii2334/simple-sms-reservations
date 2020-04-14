@@ -71,7 +71,7 @@ RSpec.describe Message, type: :model do
         company = create :company, customers_per_unit_of_time: 1
 
         message = Message.new('0123456789', "VlzDevOps 01/01 09:00")
-        expect(message.perform).to eql(I18n.t 'reservation.created', company_name: company.name, reservation_date: '09:00 AM', reservation_message: company.reservation_message)
+        expect(message.perform).to eql(I18n.t 'reservation.created', company_name: company.name, reservation_date: DateTime.new(2020, 1, 1, 9, 0).strftime('%d %B, %H:%M %p'), reservation_message: company.reservation_message)
 
         message = Message.new('0123456788', "VlzDevOps 01/01 09:00")
         expect(message.perform).to eql(I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.next_available_time_slots_to_string(DateTime.new(2020,1,1,9,0), 3)))

@@ -53,7 +53,7 @@ class Message
     if reservation.save
       I18n.t 'reservation.created',
              company_name: @company.name,
-             reservation_date: @reservation_date.strftime('%d %B, %H:%M %p'),
+             reservation_date: day_month_hour_min_am_pm(@reservation_date),
              reservation_message: @company.reservation_message
     else
       reservation.errors.full_messages.join('.')
@@ -61,7 +61,8 @@ class Message
   end
 
   def set_locale
-    if Phonelib.parse(@sender).country == 'RO'
+    case Phonelib.parse(@sender).country
+    when 'RO'
       I18n.default_locale = :ro
     else
       I18n.default_locale = :en

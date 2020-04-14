@@ -66,6 +66,10 @@ module TimeUtils
   def hour_min_am_pm(date_time)
     date_time.strftime('%H:%M %p')
   end
+
+  def day_month_hour_min_am_pm(date_time)
+    date_time.strftime('%d %B, %H:%M %p')
+  end
 end
 
 class TimeMonkeyPatch
