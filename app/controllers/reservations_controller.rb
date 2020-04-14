@@ -1,6 +1,4 @@
 class ReservationsController < ApplicationController
-  include ::TimeUtils
-
   protect_from_forgery with: :exception
   before_action :authenticate_user!
   before_action :set_reservation
@@ -16,7 +14,7 @@ class ReservationsController < ApplicationController
         to: "+#{@reservation.phone_number}",
         body: I18n.t('reservation.canceled',
                      company_name: @reservation.company.name,
-                     reservation_date: day_month_hour_min_am_pm(@reservation.reservation_date),
+                     reservation_date: @reservation.reservation_date.strftime('%d %B, %H:%M %p'),
                      cancel_message: params[:cancel_reservation_message]
                     )
       )
