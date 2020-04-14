@@ -5,7 +5,7 @@ class MessagesController < ActionController::Base
     message = Message.new(received_params['msisdn'], received_params['text'])
 
     client.sms.send(
-      from: ENV['NEXMO_NUMBER'],
+      from: message.company.name,
       to: message.sender,
       text: message.perform
     )
@@ -20,7 +20,7 @@ class MessagesController < ActionController::Base
 
     twiml = Twilio::TwiML::MessagingResponse.new do |r|
       r.message(
-        from: ENV['TWILIO_NUMBER'],
+        from: message.company.name,
         to: message.sender,
         body: message.perform
       )
