@@ -3,7 +3,7 @@
 require 'time_utils'
 
 class Message
-  include TimeUtils
+  include ::TimeUtils
 
   attr_accessor :sender,
                 :text,

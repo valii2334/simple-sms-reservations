@@ -3,7 +3,7 @@
 require 'time_utils'
 
 class Company < ApplicationRecord
-  include TimeUtils
+  include ::TimeUtils
 
   has_many   :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
   belongs_to :user, required: true

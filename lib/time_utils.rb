@@ -73,5 +73,5 @@ module TimeUtils
 end
 
 class TimeMonkeyPatch
-  include TimeUtils
+  include ::TimeUtils
 end
