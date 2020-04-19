@@ -27,9 +27,9 @@ class Users::SessionsController < Devise::SessionsController
   # end
   def after_sign_in_path_for(_resource)
     unless current_user.companies.empty?
-      redirect_to company_path(current_user.companies.first)
+      company_path(current_user.companies.first)
     else
-      redirect_to new_company_path
+      new_company_path
     end
   end
 end
