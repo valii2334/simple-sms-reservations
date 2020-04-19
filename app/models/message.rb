@@ -53,7 +53,7 @@ class Message
     if reservation.save
       I18n.t 'reservation.created',
              company_name: @company.name,
-             reservation_date: day_month_hour_min_am_pm(@reservation_date),
+             reservation_date: day_month_hour_min(@reservation_date),
              reservation_message: @company.reservation_message
     else
       reservation.errors.full_messages.join('.')

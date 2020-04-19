@@ -93,19 +93,19 @@ class Company < ApplicationRecord
   end
 
   def weekday_schedule
-    I18n.t 'company.weekday_schedule', opening_time: hour_min_am_pm(opening_time), closing_time: hour_min_am_pm(closing_time)
+    I18n.t 'company.weekday_schedule', opening_time: hour_min(opening_time), closing_time: hour_min(closing_time)
   end
 
   def saturday_schedule
     return I18n.t 'company.saturday_schedule_closed' if closed_saturday
 
-    I18n.t 'company.saturday_schedule_open', opening_time: hour_min_am_pm(opening_time_saturday), closing_time: hour_min_am_pm(closing_time_saturday)
+    I18n.t 'company.saturday_schedule_open', opening_time: hour_min(opening_time_saturday), closing_time: hour_min(closing_time_saturday)
   end
 
   def sunday_schedule
     return I18n.t 'company.sunday_schedule_closed' if closed_sunday
 
-    I18n.t 'company.sunday_schedule_open', opening_time: hour_min_am_pm(opening_time_sunday), closing_time: hour_min_am_pm(closing_time_sunday)
+    I18n.t 'company.sunday_schedule_open', opening_time: hour_min(opening_time_sunday), closing_time: hour_min(closing_time_sunday)
   end
 
   private
