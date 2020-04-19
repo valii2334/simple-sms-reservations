@@ -3,6 +3,9 @@
 </div>
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'user' }) do |f| %>
   <div class="form-group">
+    <%= render "devise/shared/error_messages", resource: resource %>
+  </div>
+  <div class="form-group">
     <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control form-control-user', placeholder: "Enter Email Address..."%>
   </div>
   <div class="form-group">
