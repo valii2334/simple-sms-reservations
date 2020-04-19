@@ -26,10 +26,10 @@ class Users::SessionsController < Devise::SessionsController
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
   # end
   def after_sign_in_path_for(_resource)
-    if current_user.companies
-      company_path(current_user.companies.first)
+    unless current_user.companies.empty?
+      redirect_to company_path(current_user.companies.first)
     else
-      new_company_path
+      redirect_to new_company_path
     end
   end
 end
