@@ -48,7 +48,7 @@ en:
     step_2_html: "<p>Chose a unique company identification code such as <b>Lawyer1stStreet</b> ( this code will be used by customers to identify your company when they make a reservation )</p>"
     step_3_html: "<p>Enter company’s schedule. In this case Monday - Friday from 09:00 to 17:00</p>"
     step_4_html: "<p>Enter how much time you need for each reservation and how many simultaneous reservation can be made</p>"
-    step_5_html: "<p>Romanian customers have send a message to <b><a href='tel:+40371700762'>+4 0371 700 762</a></b></p><p>Digi customers have to use the international phone number</p>"
+    step_5_html: "<p>Romanian customers have to send a message to <b><a href='tel:+40371700762'>+4 0371 700 762</a></b></p><p>Digi customers have to use the international phone number</p>"
     step_6_html: "<p>International customers have to send a message to <b><a href='tel:+15878054694'>+1 587 805 4694</a></b></p>"
     example_html: "<p>To make a reservation for August 1st 13:00, just send an SMS to a phone number from above with the following text: <b>Lawyer1stStreet</b> 1/8 13:00</p><p>Message format must be: COMPANY_UNIQUE_CODE DD/MM HH:MM</p><p>Hour must be sent in 24-hour clock format</p>"
     help_html: "<p>If you have any questions send an email to: <a href='mailto:easysmsreservations@gmail.com'><strong>easysmsreservations@gmail.com</strong></a></p>"
