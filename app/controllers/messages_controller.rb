@@ -5,7 +5,7 @@ class MessagesController < ActionController::Base
     message = Message.new(received_params['msisdn'], received_params['text'])
 
     client.sms.send(
-      from: from: ENV['NEXMO_NUMBER'],
+      from: ENV['NEXMO_NUMBER'],
       to: message.sender,
       text: message.perform
     )
