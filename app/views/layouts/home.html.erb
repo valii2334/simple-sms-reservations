@@ -9,12 +9,19 @@
   <%= csp_meta_tag %>
 
   <%= stylesheet_link_tag 'landing-page.min', media: 'all', 'data-turbolinks-track': 'reload' %>
-  <%= stylesheet_link_tag 'vendor/bootstrap/css/bootstrap.min.css', :media => "all" %>
+  <%= stylesheet_link_tag 'vendor/bootstrap/css/bootstrap.min.css', media: "all" %>
 
-  <%= stylesheet_link_tag 'vendor/fontawesome-free/css/all.min.css', :media => "all" %>
-  <%= stylesheet_link_tag 'vendor/simple-line-icons/css/simple-line-icons.css', :media => "all" %>
+  <%= stylesheet_link_tag 'vendor/fontawesome-free/css/all.min.css', media: "all" %>
+  <%= stylesheet_link_tag 'vendor/simple-line-icons/css/simple-line-icons.css', media: "all" %>
 
-  <title><%= t 'landing_page.title' %></title>
+  <meta property='title' content='Simple SMS Reservations'>
+  <meta property='description' content='Easiest SMS reservation system for your business!'>
+  <meta property='keywords' content='sms reservations, sms booking, sms reservation system, sms message'>
+
+  <meta property='og:type' content='website'>
+  <meta property='og:url' content='https://simplesmsreservations.com'>
+  <meta property='og:site_name' content='Simple SMS Reservations'>
+  <meta property='og:image' itemprop='image primaryImageOfPage' content="<%=asset_path('home/appointment.jpg')%>">
 
   <!-- Custom fonts for this template -->
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">

@@ -15,10 +15,10 @@ en:
     sunday_schedule_open: "Sunday: %{opening_time} - %{closing_time}."
     sunday_schedule_closed: "Sunday: Closed."
   landing_page:
-    title: "Easy SMS Reservations"
+    title: "Simple SMS Reservations"
     sign_in: "Sign In"
     sign_up: "Get Started"
-    short_description: "Easiest way for your customers to schedule an appointment via SMS!"
+    short_description: "Easiest SMS reservation system for your business!"
     feature_1_title_short: "Start in 5 minutes"
     feature_1_title: "No more than 5 minutes before you can start accepting reservations"
     feature_3_title_short: "First month free"
