@@ -6,7 +6,7 @@ en:
     temporarily_closed: "%{company_name} is no longer accepting reservations via SMS. %{company_temporarily_closed_message}"
     out_of_business_hour: "%{company_name} is not available at this time. Our schedule is %{company_schedule}"
     reservation_slot_still_available: "%{company_name} you can not make a reservation at this time. Next 3 available time slots are: %{next_slots}."
-    created: "%{company_name} reservation for %{reservation_date} was successfuly created. %{reservation_message}."
+    created: "%{company_name} reservation for %{reservation_date} was successfuly created. %{reservation_message}"
     canceled: "%{company_name} reservation from %{reservation_date} was canceled. %{cancel_message}"
   company:
     weekday_schedule: "Monday - Friday: %{opening_time} - %{closing_time}."

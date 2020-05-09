@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_08_194756) do
+ActiveRecord::Schema.define(version: 2020_05_09_141803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2020_04_08_194756) do
     t.datetime "closing_time_sunday"
     t.string "reservation_message"
     t.string "temporarily_closed_message"
+    t.string "date_format", default: "DMY", null: false
     t.index ["code"], name: "index_companies_on_code", unique: true
     t.index ["name"], name: "index_companies_on_name", unique: true
   end

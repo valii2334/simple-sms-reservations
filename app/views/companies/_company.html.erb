@@ -54,6 +54,22 @@
       <div class="form-row">
         <div class="form-group col-md-12">
           <div class="field">
+            <label>What is the date format customers must use when making a reservation?</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-2 col-sm-12 col-xs-12">
+          <div class="field">
+            <%= f.select(:date_format, [[ 'DD/MM', 'DMY'], ['MM/DD', 'MDY'], ['YYYY/MM/DD', 'YMD']], {}, { class: 'form-control ' }) %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-12">
+          <div class="field">
             <label>How long does a reservation take ? Example: if you select 10 minutes then there will be 6 available spots each hour</label>
           </div>
         </div>

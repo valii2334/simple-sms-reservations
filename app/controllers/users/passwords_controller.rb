@@ -19,20 +19,17 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # PUT /resource/password
   def update
-    binding.pry
     super
   end
 
   # protected
 
   def after_resetting_password_path_for(resource)
-    binding.pry
     super(resource)
   end
 
   # The path used after sending reset password instructions
   def after_sending_reset_password_instructions_path_for(resource_name)
-    binding.pry
     super(resource_name)
   end
 end

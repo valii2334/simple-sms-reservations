@@ -5,11 +5,18 @@ require 'time_utils'
 class Company < ApplicationRecord
   include ::TimeUtils
 
+  ACCEPTED_DATE_FORMATS = {
+    'YMD' => ['%Y/%m/%d %H:%M %p', '%Y.%m.%d %H:%M %p', '%Y/%m/%d %H:%M', '%Y.%m.%d %H:%M'],
+    'DMY' => ['%d/%m/%Y %H:%M %p', '%d.%m.%Y %H:%M %p', '%d/%m/%Y %H:%M', '%d.%m.%Y %H:%M', '%d/%m %H:%M %p', '%d.%m %H:%M %p', '%d/%m %H:%M', '%d.%m %H:%M'],
+    'MDY' => ['%m/%d/%Y %H:%M %p', '%m.%d.%Y %H:%M %p', '%m/%d/%Y %H:%M', '%m.%d.%Y %H:%M', '%m/%d %H:%M %p', '%m.%d %H:%M %p', '%m/%d %H:%M', '%m.%d %H:%M']
+  }
+
   has_many   :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
   belongs_to :user, required: true
 
   validates :name,                                           uniqueness: true,
                                                              presence: true
+  validates :date_format,                                    inclusion: { in: ['YMD', 'DMY', 'MDY'] }
   validates :opening_time,                                   presence: true
   validates :closing_time,                                   presence: true
   validates :closed_saturday,                                inclusion: { in: [true, false] }

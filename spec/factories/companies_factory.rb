@@ -3,6 +3,7 @@ FactoryBot.define do
     user
     name { 'VLZ DevOps' }
     code { 'vlzdevops' }
+    date_format { 'DMY' }
     opening_time { DateTime.new(2012, 07, 11, 9, 0) }
     closing_time { DateTime.new(2012, 07, 11, 10, 0) }
     unit_of_time { 15 }
