@@ -9,7 +9,7 @@ class Company < ApplicationRecord
     'YMD' => ['%Y/%m/%d %H:%M %p', '%Y.%m.%d %H:%M %p', '%Y/%m/%d %H:%M', '%Y.%m.%d %H:%M'],
     'DMY' => ['%d/%m/%Y %H:%M %p', '%d.%m.%Y %H:%M %p', '%d/%m/%Y %H:%M', '%d.%m.%Y %H:%M', '%d/%m %H:%M %p', '%d.%m %H:%M %p', '%d/%m %H:%M', '%d.%m %H:%M'],
     'MDY' => ['%m/%d/%Y %H:%M %p', '%m.%d.%Y %H:%M %p', '%m/%d/%Y %H:%M', '%m.%d.%Y %H:%M', '%m/%d %H:%M %p', '%m.%d %H:%M %p', '%m/%d %H:%M', '%m.%d %H:%M']
-  }
+  }.freeze
 
   has_many   :reservations, -> { order(reservation_date: :desc) }, dependent: :destroy
   belongs_to :user, required: true
@@ -35,6 +35,7 @@ class Company < ApplicationRecord
   validate :closing_time_bigger_than_oppening_time,          if: -> { opening_time.present? && closing_time.present? }
   validate :closing_time_bigger_than_oppening_time_saturday, if: -> { opening_time_saturday.present? && closing_time_saturday.present? && !closed_saturday }
   validate :closing_time_bigger_than_oppening_time_sunday,   if: -> { opening_time_sunday.present? && closing_time_sunday.present? && !closed_sunday }
+  validate :can_change_customers_per_unit_of_time
 
   before_save :downcase_code
 
@@ -58,6 +59,10 @@ class Company < ApplicationRecord
     return if closing_time_sunday > opening_time_sunday
 
     errors.add(:closing_time_sunday, "must be bigger than #{closing_time_sunday}")
+  end
+
+  def can_change_customers_per_unit_of_time
+    errors.add(:customers_per_unit_of_time, "can not be changed if reservations present") if reservations.any?
   end
 
   def open?(reservation_date)
