@@ -67,6 +67,13 @@ class Company < ApplicationRecord
     reservation_date.during_business_hours?
   end
 
+  def open_today?(date)
+    return false if temporarily_closed
+    return false if closed_saturday && date.saturday?
+    return false if closed_sunday && date.sunday?
+    true
+  end
+
   def available_time_slots(reservation_date)
     start_time, end_time = opening_time, closing_time if reservation_date.weekday?
     start_time, end_time = opening_time_saturday, closing_time_saturday if reservation_date.saturday?
@@ -131,12 +138,12 @@ class Company < ApplicationRecord
 
   def saturday_working_schedule
     return [opening_time_saturday.strftime('%H:%M %p'), closing_time_saturday.strftime('%H:%M %p')] unless closed_saturday
-    ['00:00 AM', '00:00 AM']
+    []
   end
 
   def sunday_working_schedule
     return [opening_time_sunday.strftime('%H:%M %p'), closing_time_sunday.strftime('%H:%M %p')] unless closed_sunday
-    ['00:00 AM', '00:00 AM']
+    []
   end
 
   def weekday_working_schedule

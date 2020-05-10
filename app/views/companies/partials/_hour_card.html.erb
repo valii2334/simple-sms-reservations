@@ -1,0 +1,18 @@
+<div class="card" style="margin-top: 5px;">
+  <div class="card-header" id="heading-<%= hour %>">
+    <h6 class="mb-0">
+      <a role="button" data-toggle="collapse" href="#collapse-<%= hour %>" aria-expanded="true" aria-controls="collapse-<%= hour %>" style="text-decoration: none;">
+        Reservations starting from <%= hour %>:00
+      </a>
+    </h6>
+  </div>
+  <div id="collapse-<%= hour %>" class="collapse" data-parent="#accordion" aria-labelledby="heading-<%= hour %>">
+    <div class="card-body">
+      <div id="accordion-1">
+        <% available_time_slots.each do |time_slot| %>
+          <%= render partial: 'companies/partials/time_slot_card', locals: { time_slot: time_slot } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

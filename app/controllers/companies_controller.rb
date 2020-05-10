@@ -2,6 +2,7 @@ class CompaniesController < ApplicationController
   protect_from_forgery with: :exception
   before_action :authenticate_user!
   before_action :set_company, only: [:edit, :show, :update]
+  before_action :set_date, only: [:edit, :show, :update]
   before_action :set_new_company, only: [:new]
 
   load_and_authorize_resource
@@ -38,6 +39,18 @@ class CompaniesController < ApplicationController
 
   def set_company
     @company = Company.find(params[:id])
+  end
+
+  def set_date
+    @date = Date.current
+
+    if @company.open_today?(@date)
+      @available_time_slots = @company.available_time_slots(@date).group_by{|date| date.strftime('%H') }
+      @reservations = @company.reservations.where('reservation_date BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day)
+    else
+      @available_time_slots = []
+      @reservations = []
+    end
   end
 
   def company_params
