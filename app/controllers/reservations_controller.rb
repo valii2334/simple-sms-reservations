@@ -1,9 +1,15 @@
 class ReservationsController < ApplicationController
   protect_from_forgery with: :exception
   before_action :authenticate_user!
-  before_action :set_reservation
+  before_action :set_reservation, only: [:destroy]
 
   load_and_authorize_resource
+
+  def create
+    @reservation = Reservation.create(reservation_params)
+
+    redirect_to company_path(id: @reservation.company_id)
+  end
 
   def destroy
     set_locale
@@ -40,5 +46,13 @@ class ReservationsController < ApplicationController
 
   def client
     Twilio::REST::Client.new ENV['TWILIO_ACCOUNT_SID'], ENV['TWILIO_AUTH_TOKEN']
+  end
+
+  def reservation_params
+    params.require(:reservation).permit(
+      :reservation_date,
+      :phone_number,
+      :company_id
+    )
   end
 end

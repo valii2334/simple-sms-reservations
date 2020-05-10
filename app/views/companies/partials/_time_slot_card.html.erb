@@ -4,8 +4,14 @@
       <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-1-<%= time_slot.to_i %>" aria-expanded="false" aria-controls="collapse-1-<%= time_slot.to_i %>" style="text-decoration: none;">
         <% reservations_made = @reservations.select { |reservation| reservation.reservation_date == time_slot }.count %>
         <% reservations_available = @company.customers_per_unit_of_time - reservations_made %>
-        <%= time_slot.strftime('%H:%M') %> - <%= (time_slot + @company.unit_of_time.minutes).strftime('%H:%M') %> (<%= reservations_made %> reservations made, <%= reservations_available %> reservations available  )
+        <%= time_slot.strftime('%H:%M') %> - <%= (time_slot + @company.unit_of_time.minutes).strftime('%H:%M') %> (<%= reservations_made %> reservations made, <%= reservations_available %> spots available  )
       </a>
+      <% if reservations_available > 0 %>
+        <a href="#" data-toggle="modal" data-target="#add_reservation_<%= time_slot.to_i %>" class="btn btn-sm btn-outline-success" style="text-align: right; float: right;">
+          Add reservation
+        </a>
+        <%= render partial: 'companies/partials/add_reservation', locals: { time_slot: time_slot } %>
+      <% end %>
     </h6>
   </div>
   <div id="collapse-1-<%= time_slot.to_i %>" class="collapse" data-parent="#accordion-1" aria-labelledby="heading-1-<%= time_slot.to_i %>">
@@ -16,7 +22,7 @@
           <% @reservations.select { |reservation| reservation.reservation_date == time_slot }.each_with_index do |reservation, index| %>
             <tr>
               <td style="text-align: left;">
-                <%=  Phonelib.parse(reservation.phone_number).full_international %>
+                <%=  Phonelib.parse(reservation.phone_number) %>
               </td>
               <td style="text-align: center;">
                 <%= reservation.details || 'No additional details provided' %>

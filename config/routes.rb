@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :reservations, only: [:destroy]
+  resources :reservations, only: [:destroy, :create]
 
   resources :details do
     collection do

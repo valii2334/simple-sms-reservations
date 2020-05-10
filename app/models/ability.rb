@@ -10,5 +10,6 @@ class Ability
     can :create, Company
 
     can :destroy, Reservation, company: { user_id: user.id }
+    can :create, Reservation
   end
 end

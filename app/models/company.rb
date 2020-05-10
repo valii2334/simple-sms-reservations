@@ -130,6 +130,12 @@ class Company < ApplicationRecord
   private
 
   def set_business_hours
+    work_week = [ :mon, :tue, :wed, :thu, :fri ]
+    work_week += [ :sat ] unless closed_saturday
+    work_week += [ :sun ] unless closed_sunday
+
+    BusinessTime::Config.work_week = work_week
+
     BusinessTime::Config.work_hours = {
       mon: weekday_working_schedule,
       tue: weekday_working_schedule,
@@ -142,16 +148,16 @@ class Company < ApplicationRecord
   end
 
   def saturday_working_schedule
-    return [opening_time_saturday.strftime('%H:%M %p'), closing_time_saturday.strftime('%H:%M %p')] unless closed_saturday
+    return [opening_time_saturday.strftime('%H:%M'), closing_time_saturday.strftime('%H:%M')] unless closed_saturday
     []
   end
 
   def sunday_working_schedule
-    return [opening_time_sunday.strftime('%H:%M %p'), closing_time_sunday.strftime('%H:%M %p')] unless closed_sunday
+    return [opening_time_sunday.strftime('%H:%M'), closing_time_sunday.strftime('%H:%M')] unless closed_sunday
     []
   end
 
   def weekday_working_schedule
-    [opening_time.strftime('%H:%M %p'), closing_time.strftime('%H:%M %p')]
+    [opening_time.strftime('%H:%M'), closing_time.strftime('%H:%M')]
   end
 end

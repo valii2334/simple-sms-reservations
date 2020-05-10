@@ -1,0 +1,26 @@
+<div class="modal fade" id="add_reservation_<%= time_slot.to_i %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New reservation for <%= time_slot.strftime(Company::ACCEPTED_DATE_FORMATS[@company.date_format].first) %></h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_for(Reservation.new, url: reservations_path, html: { method: :post } ) do |f| %>
+          <%= f.hidden_field :reservation_date, value: time_slot %>
+          <%= f.hidden_field :company_id, value: @company.id %>
+          <div class="form-row">
+            <div class="form-group col-md-12">
+              <div class="field">
+                <%= f.telephone_field :phone_number, class: 'form-control', placeholder: 'Phone number', required: true %>
+              </div>
+            </div>
+          </div>
+          <%= f.submit "Create reservation", class: 'btn btn-block btn-success' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

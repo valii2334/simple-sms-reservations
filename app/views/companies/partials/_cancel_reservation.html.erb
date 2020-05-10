@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Do you want to cancel this reservation ?</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Do you want to cancel this reservation?</h5>
         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
@@ -10,7 +10,7 @@
       <div class="modal-body">
         <%= form_for(reservation, url: reservation_path(reservation), html: { method: :delete } ) do |f| %>
           <div class="form-group">
-            <input id="cancel_reservation_message" name="cancel_reservation_message" type="text" autofocus="true" autocomplete="email" class='form-control form-control-user' placeholder="Optional. Cancellation message"/>
+            <input id="cancel_reservation_message" name="cancel_reservation_message" type="text" autofocus="true" autocomplete="email" class='form-control form-control-user' placeholder="Cancellation reason"/>
           </div>
           <%= f.submit "Cancel reservation", class: 'btn btn-block btn-danger' %>
         <% end %>
