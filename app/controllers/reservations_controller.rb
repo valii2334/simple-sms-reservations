@@ -52,7 +52,8 @@ class ReservationsController < ApplicationController
     params.require(:reservation).permit(
       :reservation_date,
       :phone_number,
-      :company_id
+      :company_id,
+      :details
     )
   end
 end
