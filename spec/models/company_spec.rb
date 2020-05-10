@@ -225,18 +225,18 @@ RSpec.describe Company, type: :model do
     end
 
     it 'returns false if all reservations slots are occupied' do
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567891'
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567892'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567891'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567892'
 
-      expect(company.reservation_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(false)
+      expect(company.reservation_slot_still_available?(DateTime.new(2120,4,17,9,0))).to eql(false)
     end
 
     it 'returns true if one spot is still available' do
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567891'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567891'
 
-      expect(company.reservation_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(true)
+      expect(company.reservation_slot_still_available?(DateTime.new(2120,4,17,9,0))).to eql(true)
     end
   end
 
@@ -255,25 +255,25 @@ RSpec.describe Company, type: :model do
     it 'returns all available time slots' do
       company.customers_per_unit_of_time = 1
 
-      expect(company.next_available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
-        DateTime.new(2020,4,17,9,0).in_time_zone,
-        DateTime.new(2020,4,17,9,15).in_time_zone,
-        DateTime.new(2020,4,17,9,30).in_time_zone,
-        DateTime.new(2020,4,17,9,45).in_time_zone
+      expect(company.next_available_time_slots(DateTime.new(2120,4,17,9,0))).to eql([
+        DateTime.new(2120,4,17,9,0).in_time_zone,
+        DateTime.new(2120,4,17,9,15).in_time_zone,
+        DateTime.new(2120,4,17,9,30).in_time_zone,
+        DateTime.new(2120,4,17,9,45).in_time_zone
       ])
 
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,0), phone_number: '1234567890'
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,30), phone_number: '1234567891'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,30), phone_number: '1234567891'
 
-      expect(company.next_available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
-        DateTime.new(2020,4,17,9,15).in_time_zone,
-        DateTime.new(2020,4,17,9,45).in_time_zone
+      expect(company.next_available_time_slots(DateTime.new(2120,4,17,9,0))).to eql([
+        DateTime.new(2120,4,17,9,15).in_time_zone,
+        DateTime.new(2120,4,17,9,45).in_time_zone
       ])
 
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,15), phone_number: '1234567890'
-      create :reservation, company: company, reservation_date: DateTime.new(2020,4,17,9,45), phone_number: '1234567891'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,15), phone_number: '1234567890'
+      create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,45), phone_number: '1234567891'
 
-      expect(company.next_available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([])
+      expect(company.next_available_time_slots(DateTime.new(2120,4,17,9,0))).to eql([])
     end
   end
 end

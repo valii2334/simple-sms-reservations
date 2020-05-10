@@ -47,23 +47,23 @@ RSpec.describe Message, type: :model do
       it 'returns company is temporarily closed  if company is closed temporarily_closed' do
         company.update(temporarily_closed: true)
 
-        message = Message.new('0123456789', "VlzDevOps 01/01 09:00")
+        message = Message.new('0123456789', "VlzDevOps 01/01/2120 09:00")
         expect(message.perform).to eql(I18n.t('reservation.temporarily_closed', company_name: company.name, company_temporarily_closed_message: company.temporarily_closed_message))
       end
 
       it 'returns company is closed if not between business hours' do
-        message = Message.new('0123456789', "VlzDevOps 01/01 08:00")
+        message = Message.new('0123456789', "VlzDevOps 01/01/2120 08:00")
         expect(message.perform).to eql(I18n.t('reservation.out_of_business_hour', company_name: company.name, company_schedule: company.schedule))
       end
 
       it 'returns time slot not available if time slot is occupied' do
         company.update(customers_per_unit_of_time: 1)
 
-        message = Message.new('0123456789', "VlzDevOps 01/01 09:00")
-        expect(message.perform).to eql(I18n.t 'reservation.created', company_name: company.name, reservation_date: DateTime.new(2020, 1, 1, 9, 0).strftime('%d %B, %H:%M'), reservation_message: company.reservation_message)
+        message = Message.new('0123456789', "VlzDevOps 01/01/2120 09:00")
+        expect(message.perform).to eql(I18n.t 'reservation.created', company_name: company.name, reservation_date: DateTime.new(2120, 1, 1, 9, 0).strftime('%d %B, %H:%M'), reservation_message: company.reservation_message)
 
-        message = Message.new('0123456788', "VlzDevOps 01/01 09:00")
-        expect(message.perform).to eql(I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.next_available_time_slots_to_string(DateTime.new(2020,1,1,9,0), 3)))
+        message = Message.new('0123456788', "VlzDevOps 01/01/2120 09:00")
+        expect(message.perform).to eql(I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.next_available_time_slots_to_string(DateTime.new(2120,1,1,9,0), 3)))
       end
     end
   end

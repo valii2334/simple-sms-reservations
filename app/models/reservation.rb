@@ -6,9 +6,14 @@ class Reservation < ApplicationRecord
   validates :reservation_date,         presence: true
   validates :phone_number,             presence: true
 
-  validate :company_is_open
+  validate :reservation_details
 
-  def company_is_open
+  def reservation_details
+    unless reservation_date.future?
+      errors.add(:base, I18n.t('reservation.not_in_the_future', company_name: company.name))
+      return
+    end
+
     if company.temporarily_closed
       errors.add(:base, I18n.t('reservation.temporarily_closed', company_name: company.name, company_temporarily_closed_message: company.temporarily_closed_message))
       return
