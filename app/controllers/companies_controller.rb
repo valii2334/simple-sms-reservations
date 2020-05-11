@@ -43,6 +43,7 @@ class CompaniesController < ApplicationController
 
   def set_date
     @date = Date.current
+    @date = DateTime.strptime(params[:date], '%Q') if params[:date]
 
     if @company.open_today?(@date)
       @available_time_slots = @company.available_time_slots(@date).group_by{|date| date.strftime('%H') }

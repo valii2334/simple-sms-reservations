@@ -7,10 +7,12 @@
         <%= time_slot.strftime('%H:%M') %> - <%= (time_slot + @company.unit_of_time.minutes).strftime('%H:%M') %> (<%= reservations_made %> reservations made, <%= reservations_available %> spots available  )
       </a>
       <% if reservations_available > 0 %>
-        <a href="#" data-toggle="modal" data-target="#add_reservation_<%= time_slot.to_i %>" class="btn btn-sm btn-outline-success" style="text-align: right; float: right;">
-          Add reservation
-        </a>
-        <%= render partial: 'companies/partials/add_reservation', locals: { time_slot: time_slot } %>
+        <% if @date >= DateTime.now.beginning_of_day %>
+          <a href="#" data-toggle="modal" data-target="#add_reservation_<%= time_slot.to_i %>" class="btn btn-sm btn-outline-success" style="text-align: right; float: right;">
+            Add reservation
+          </a>
+          <%= render partial: 'companies/partials/add_reservation', locals: { time_slot: time_slot } %>
+        <% end %>
       <% end %>
     </h6>
   </div>

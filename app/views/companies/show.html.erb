@@ -1,14 +1,58 @@
 <div class="card" style="margin-top: 20px;">
   <div class="card-header">
     <b>
+      Reservations date
+    </b>
+  </div>
+  <div class="card-body">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <div class="input-group date" id="datetimepicker4" data-target-input="nearest" data-company-id="<%= @company.id %>" data-current-date="<%= @date.strftime('%m-%d-%Y') %>">
+          <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4"/>
+          <div class="input-group-append" data-target="#datetimepicker4" data-toggle="datetimepicker">
+              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+  <div class="card-header">
+    <b>
       <%= @date.strftime('%d %B %Y') %>
     </b>
   </div>
   <div class="card-body">
     <div id="accordion">
-      <% @available_time_slots.each do |hour, available_time_slots| %>
-        <%= render partial: 'companies/partials/hour_card', locals: { hour: hour, available_time_slots: available_time_slots } %>
+      <% unless @available_time_slots.any? %>
+        <b>
+          Your company is closed today!
+        </b>
+      <% else %>
+        <% @available_time_slots.each do |hour, available_time_slots| %>
+          <%= render partial: 'companies/partials/hour_card', locals: { hour: hour, available_time_slots: available_time_slots } %>
+        <% end %>
       <% end %>
     </div>
   </div>
 </div>
+
+<%= javascript_tag do %>
+  var current_date = $('#datetimepicker4').data('current-date');
+
+  $('#datetimepicker4').datetimepicker({
+      date: current_date,
+      format: "dddd, MMMM Do YYYY"
+  });
+
+  $("#datetimepicker4").on("hide.datetimepicker", ({date, oldDate}) => {
+
+    if(date != oldDate) {
+      var new_date = new Date(date).getTime() + new Date(date).getTimezoneOffset() * 1000 * -1 * 60
+      var company_id = $('#datetimepicker4').data('company-id');
+      window.location.href = '/companies/' + company_id + '/?date=' + new_date;
+    }
+  })
+<% end %>

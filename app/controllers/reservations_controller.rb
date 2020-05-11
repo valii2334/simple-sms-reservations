@@ -6,9 +6,12 @@ class ReservationsController < ApplicationController
   load_and_authorize_resource
 
   def create
-    @reservation = Reservation.create(reservation_params)
+    @reservation = Reservation.new(reservation_params)
 
-    redirect_to company_path(id: @reservation.company_id)
+    redirect_to company_path(
+      id: @reservation.company_id,
+      date: @reservation.reservation_date.to_datetime.strftime('%Q')
+    )
   end
 
   def destroy

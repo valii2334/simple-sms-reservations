@@ -35,7 +35,6 @@ class Company < ApplicationRecord
   validate :closing_time_bigger_than_oppening_time,          if: -> { opening_time.present? && closing_time.present? }
   validate :closing_time_bigger_than_oppening_time_saturday, if: -> { opening_time_saturday.present? && closing_time_saturday.present? && !closed_saturday }
   validate :closing_time_bigger_than_oppening_time_sunday,   if: -> { opening_time_sunday.present? && closing_time_sunday.present? && !closed_sunday }
-  validate :can_change_customers_per_unit_of_time
 
   before_save :downcase_code
 
@@ -59,10 +58,6 @@ class Company < ApplicationRecord
     return if closing_time_sunday > opening_time_sunday
 
     errors.add(:closing_time_sunday, "must be bigger than #{closing_time_sunday}")
-  end
-
-  def can_change_customers_per_unit_of_time
-    errors.add(:customers_per_unit_of_time, "can not be changed if reservations present") if reservations.any?
   end
 
   def open?(reservation_date)
