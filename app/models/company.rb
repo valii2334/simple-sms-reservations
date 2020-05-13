@@ -143,16 +143,16 @@ class Company < ApplicationRecord
   end
 
   def saturday_working_schedule
-    return [opening_time_saturday.strftime('%H:%M'), closing_time_saturday.strftime('%H:%M')] unless closed_saturday
+    return [opening_time_saturday.strftime('%H), closing_time_saturday.strftime('%H)] unless closed_saturday
     []
   end
 
   def sunday_working_schedule
-    return [opening_time_sunday.strftime('%H:%M'), closing_time_sunday.strftime('%H:%M')] unless closed_sunday
+    return [opening_time_sunday.strftime('%H), closing_time_sunday.strftime('%H)] unless closed_sunday
     []
   end
 
   def weekday_working_schedule
-    [opening_time.strftime('%H:%M'), closing_time.strftime('%H:%M')]
+    [opening_time.strftime('%H), closing_time.strftime('%H)]
   end
 end

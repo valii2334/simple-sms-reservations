@@ -42,12 +42,19 @@ class CompaniesController < ApplicationController
   end
 
   def set_date
-    @date = Date.current
+    @date = DateTime.now
     @date = DateTime.strptime(params[:date], '%Q') if params[:date]
 
     if @company.open_today?(@date)
-      @available_time_slots = @company.available_time_slots(@date).group_by{|date| date.strftime('%H') }
-      @reservations = @company.reservations.where('reservation_date BETWEEN ? AND ?', @date.beginning_of_day, @date.end_of_day)
+      @available_time_slots = @company.available_time_slots(@date)
+                                      .group_by{ |date| date.strftime('%H') }
+      @reservations = @company.reservations
+                              .where(
+                                'reservation_date BETWEEN ? AND ?',
+                                @date.beginning_of_day,
+                                @date.end_of_day
+                              )
+                              .group_by{ |reservation| reservation.reservation_date.strftime('%H:%M') }
     else
       @available_time_slots = []
       @reservations = []
