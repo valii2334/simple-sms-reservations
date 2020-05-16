@@ -44,15 +44,11 @@
             <i class="fas fa-fw fa-calendar"></i>
             <span>View Reservations</span>
           </a>
-
-          <% show_page = ( params[:controller] == 'companies' && params[:action] == 'show' ) %>
-
-          <div id="collapseTwo" class="collapse <%= show_page ? 'show' : '' %>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div id="collapseTwo" class="collapse <%= active_show_class(page('companies', 'show'), 'show') %>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Companies:</h6>
               <% current_user.companies.each do |company| %>
-                <% active_tab = ( show_page && params[:id].to_i == company.id ) %>
-                <%= link_to company.name, company_path(company), class: 'collapse-item ' + ( active_tab ? 'active' : '') %>
+                <%= link_to company.name, company_path(company), class: 'collapse-item ' + active_show_class(page('companies', 'show') && object_page(company), 'active') %>
               <% end %>
             </div>
           </div>
@@ -63,18 +59,13 @@
             <i class="fas fa-fw fa-cog"></i>
             <span>Edit Companies</span>
           </a>
-
-          <% edit_page = ( params[:controller] == 'companies' && params[:action] == 'edit' ) %>
-          <% new_page = ( params[:controller] == 'companies' && params[:action] == 'new' ) %>
-
-          <div id="collapseThree" class="collapse <%= ( edit_page || new_page ) ? 'show' : '' %>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div id="collapseThree" class="collapse <%=  active_show_class(page('companies', 'edit') || page('companies', 'new'), 'show') %>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Companies:</h6>
               <% current_user.companies.each do |company| %>
-                <% active_tab = ( edit_page && params[:id].to_i == company.id ) %>
-                <%= link_to company.name, edit_company_path(company), class: 'collapse-item ' + ( active_tab ? 'active' : '') %>
+                <%= link_to company.name, edit_company_path(company), class: 'collapse-item ' + active_show_class(page('companies', 'edit') && object_page(company), 'active') %>
               <% end %>
-              <%= link_to "Add new company", new_company_path, class: 'collapse-item ' + ( new_page ? 'active' : '') %>
+              <%= link_to "Add new company", new_company_path, class: 'collapse-item ' + active_show_class(page('companies', 'new'), 'active') %>
             </div>
           </div>
         </li>
