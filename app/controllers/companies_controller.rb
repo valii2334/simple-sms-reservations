@@ -2,7 +2,8 @@ class CompaniesController < ApplicationController
   protect_from_forgery with: :exception
   before_action :authenticate_user!
   before_action :set_company, only: [:edit, :show, :update]
-  before_action :set_date, only: [:edit, :show, :update]
+  before_action :set_date, only: [:show]
+  before_action :set_reservations, only: [:show]
   before_action :set_new_company, only: [:new]
 
   load_and_authorize_resource
@@ -17,7 +18,7 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params.merge(user_id: current_user.id))
 
     if @company.save
-      render 'show'
+      redirect_to company_path(@company)
     else
       render 'edit'
     end
@@ -25,7 +26,7 @@ class CompaniesController < ApplicationController
 
   def update
     if @company.update(company_params)
-      render 'show'
+      redirect_to company_path(@company)
     else
       render 'edit'
     end
@@ -44,20 +45,16 @@ class CompaniesController < ApplicationController
   def set_date
     @date = DateTime.now
     @date = DateTime.strptime(params[:date], '%Q') if params[:date]
+  end
+
+  def set_reservations
+    @available_time_slots = []
+    @reservations = []
 
     if @company.open_today?(@date)
       @available_time_slots = @company.available_time_slots(@date)
                                       .group_by{ |date| date.strftime('%H') }
-      @reservations = @company.reservations
-                              .where(
-                                'reservation_date BETWEEN ? AND ?',
-                                @date.beginning_of_day,
-                                @date.end_of_day
-                              )
-                              .group_by{ |reservation| reservation.reservation_date.strftime('%H:%M') }
-    else
-      @available_time_slots = []
-      @reservations = []
+      @reservations = @company.reservations.today_grouped_by_h_m(@date)
     end
   end
 

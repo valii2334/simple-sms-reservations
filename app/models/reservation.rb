@@ -8,6 +8,8 @@ class Reservation < ApplicationRecord
 
   validate :reservation_details
 
+  scope :today_grouped_by_h_m, -> (date) { where('reservation_date BETWEEN ? AND ?', date.beginning_of_day, date.end_of_day).group_by{ |reservation| reservation.reservation_date.strftime('%H:%M') } }
+
   def reservation_details
     unless reservation_date.future?
       errors.add(:base, I18n.t('reservation.not_in_the_future', company_name: company.name))
