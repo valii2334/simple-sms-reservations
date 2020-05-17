@@ -19,7 +19,6 @@ gem 'business_time', '~> 0.9.3'
 gem 'phonelib',      '~> 0.6.43'
 gem 'sentry-raven',  '~> 3.0.0'
 gem 'devise',           '~> 4.7.1'
-gem 'omniauth-github',  '~> 1.3.0'
 gem 'bootsnap',         '>= 1.4.2', require: false
 gem 'rubocop',          require: false
 
