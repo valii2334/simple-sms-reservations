@@ -35,11 +35,18 @@ class Company < ApplicationRecord
   validate :closing_time_bigger_than_oppening_time,          if: -> { opening_time.present? && closing_time.present? }
   validate :closing_time_bigger_than_oppening_time_saturday, if: -> { opening_time_saturday.present? && closing_time_saturday.present? && !closed_saturday }
   validate :closing_time_bigger_than_oppening_time_sunday,   if: -> { opening_time_sunday.present? && closing_time_sunday.present? && !closed_sunday }
+  validate :can_change_unit_of_time
 
   before_save :downcase_code
 
   def downcase_code
     code.downcase!
+  end
+
+  def can_change_unit_of_time
+    return unless reservations.any? && unit_of_time_changed?
+
+    errors.add(:unit_of_time, 'can not be changed if reservations present')
   end
 
   def closing_time_bigger_than_oppening_time
@@ -143,16 +150,16 @@ class Company < ApplicationRecord
   end
 
   def saturday_working_schedule
-    return [opening_time_saturday.strftime('%H'), closing_time_saturday.strftime('%H')] unless closed_saturday
+    return [opening_time_saturday.strftime('%H %p'), closing_time_saturday.strftime('%H %p')] unless closed_saturday
     []
   end
 
   def sunday_working_schedule
-    return [opening_time_sunday.strftime('%H'), closing_time_sunday.strftime('%H')] unless closed_sunday
+    return [opening_time_sunday.strftime('%H %p'), closing_time_sunday.strftime('%H %p')] unless closed_sunday
     []
   end
 
   def weekday_working_schedule
-    [opening_time.strftime('%H'), closing_time.strftime('%H')]
+    [opening_time.strftime('%H %p'), closing_time.strftime('%H %p')]
   end
 end

@@ -150,19 +150,19 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context '#can_change_customers_per_unit_of_time' do
-    it 'can not change customers_per_unit_of_time if reservations present' do
+  context '#can_change_unit_of_time' do
+    it 'can not change unit_of_time if reservations present' do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
 
-      company.customers_per_unit_of_time = 10
+      company.unit_of_time = 10
       company.save
 
       expect(company).to_not be_valid
       expect(company.errors.full_messages.join('')).to include('can not be changed if reservations present')
     end
 
-    it 'can change customers_per_unit_of_time if reservations not present' do
-      company.customers_per_unit_of_time = 10
+    it 'can change unit_of_time if reservations not present' do
+      company.unit_of_time = 10
       company.save
 
       expect(company).to be_valid

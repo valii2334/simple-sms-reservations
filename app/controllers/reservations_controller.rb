@@ -6,7 +6,7 @@ class ReservationsController < ApplicationController
   load_and_authorize_resource
 
   def create
-    @reservation = Reservation.new(reservation_params)
+    @reservation = Reservation.create(reservation_params)
 
     redirect_to company_path(
       id: @reservation.company_id,

@@ -9,7 +9,7 @@
       <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-1-<%= time_slot_integer %>" aria-expanded="false" aria-controls="collapse-1-<%= time_slot_integer %>" style="text-decoration: none;">
         <%= time_slot_hour_min %> - <%= (time_slot + @company.unit_of_time.minutes).strftime('%H:%M') %> (<%= reservations_made.count %> reservations made, <%= reservations_available %> spots available  )
       </a>
-      <% if @date.future? && reservations_available.positive? %>
+      <% if (time_slot > DateTime.current) && reservations_available.positive? %>
         <a href="#" data-toggle="modal" data-target="#add_reservation_<%= time_slot_integer %>" class="btn btn-sm btn-outline-success" style="text-align: right; float: right;">
           Add reservation
         </a>
