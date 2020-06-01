@@ -274,7 +274,7 @@ RSpec.describe Company, type: :model do
     it 'returns all available time slots' do
       company.customers_per_unit_of_time = 1
 
-      expect(company.available_time_slots_after_given_date(DateTime.new(2120,4,17,9,0))).to eql([
+      expect(company.available_time_slots_after_given_date_time(DateTime.new(2120,4,17,9,0))).to eql([
         DateTime.new(2120,4,17,9,0).in_time_zone,
         DateTime.new(2120,4,17,9,15).in_time_zone,
         DateTime.new(2120,4,17,9,30).in_time_zone,
@@ -284,7 +284,7 @@ RSpec.describe Company, type: :model do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,30), phone_number: '1234567891'
 
-      expect(company.available_time_slots_after_given_date(DateTime.new(2120,4,17,9,0))).to eql([
+      expect(company.available_time_slots_after_given_date_time(DateTime.new(2120,4,17,9,0))).to eql([
         DateTime.new(2120,4,17,9,15).in_time_zone,
         DateTime.new(2120,4,17,9,45).in_time_zone
       ])
@@ -292,7 +292,7 @@ RSpec.describe Company, type: :model do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,15), phone_number: '1234567890'
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,45), phone_number: '1234567891'
 
-      expect(company.available_time_slots_after_given_date(DateTime.new(2120,4,17,9,0))).to eql([])
+      expect(company.available_time_slots_after_given_date_time(DateTime.new(2120,4,17,9,0))).to eql([])
     end
   end
 end

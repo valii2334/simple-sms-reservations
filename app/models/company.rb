@@ -81,9 +81,9 @@ class Company < ApplicationRecord
     true
   end
 
-  def opening_closing_time_for_given_date(reservation_date)
-    return [opening_time_sunday, closing_time_sunday] if reservation_date.sunday?
-    return [opening_time_saturday, closing_time_saturday] if reservation_date.saturday?
+  def opening_closing_time_for_given_date(date)
+    return [opening_time_sunday, closing_time_sunday] if date.sunday?
+    return [opening_time_saturday, closing_time_saturday] if date.saturday?
 
     [opening_time, closing_time]
   end
@@ -96,9 +96,9 @@ class Company < ApplicationRecord
     })
   end
 
-  def today_time_slots(reservation_date)
-    start_time, end_time = opening_closing_time_for_given_date(reservation_date).map{
-      |date| sync_day_month_year(date, reservation_date)
+  def today_time_slots(date)
+    start_time, end_time = opening_closing_time_for_given_date(date).map{
+      |d| sync_day_month_year(d, date)
     }
 
     Enumerator.new {
@@ -110,23 +110,23 @@ class Company < ApplicationRecord
     }
   end
 
-  def available_time_slots_after_given_date(reservation_date)
-    today_time_slots(reservation_date).select { |available_time_slot|
-      available_time_slot >= reservation_date &&
+  def available_time_slots_after_given_date_time(date_time)
+    today_time_slots(date_time).select { |available_time_slot|
+      available_time_slot >= date_time &&
       time_slot_still_available?(available_time_slot)
     }
   end
 
-  def available_time_slots_after_given_date_to_string(reservation_date, n)
-    available_time_slots_after_given_date(reservation_date).first(n).map{ |available_time_slot|
+  def available_time_slots_after_given_date_time_to_string(date_time, n)
+    available_time_slots_after_given_date_time(date_time).first(n).map{ |available_time_slot|
       hour_min_am_pm(available_time_slot)
     }.join(', ')
   end
 
-  def time_slot_still_available?(reservation_date)
-    return false unless open?(reservation_date)
+  def time_slot_still_available?(date_time)
+    return false unless open?(date_time)
 
-    reservations.where(reservation_date: reservation_date).count < customers_per_unit_of_time
+    reservations.where(reservation_date: date_time).count < customers_per_unit_of_time
   end
 
   def schedule
