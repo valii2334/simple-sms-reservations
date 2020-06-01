@@ -67,17 +67,18 @@ class Company < ApplicationRecord
     errors.add(:closing_time_sunday, "must be bigger than #{closing_time_sunday}")
   end
 
-  def open?(reservation_date)
+  def open?(date_time)
     return false if temporarily_closed
 
     set_business_hours
-    reservation_date.during_business_hours?
+    date_time.during_business_hours?
   end
 
   def open_today?(date)
     return false if temporarily_closed
     return false if closed_saturday && date.saturday?
     return false if closed_sunday && date.sunday?
+    
     true
   end
 
