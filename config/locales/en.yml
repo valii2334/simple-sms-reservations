@@ -43,7 +43,7 @@ en:
     testimonials_customer_1: "Easiest way if I do not want to stand in line"
     ready_to_get_started: "Ready to get started? Sign up now!"
   how_it_works:
-    title: "How it works ?"
+    title: "How it works?"
     description: "Let’s say I am a lawyer and I work Monday through Friday from 09:00 to 17:00."
     step_1_html: "<p>Create an account</p>"
     step_2_html: "<p>Chose a unique company identification code such as <b>Lawyer1stStreet</b> ( this code will be used by customers to identify your company when they make a reservation )</p>"
