@@ -236,11 +236,11 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context '#reservation_slot_still_available?' do
+  context '#time_slot_still_available?' do
     it 'returns false if not open' do
       company.temporarily_closed = true
 
-      expect(company.reservation_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(false)
+      expect(company.time_slot_still_available?(DateTime.new(2020,4,17,9,0))).to eql(false)
     end
 
     it 'returns false if all reservations slots are occupied' do
@@ -248,20 +248,20 @@ RSpec.describe Company, type: :model do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567891'
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567892'
 
-      expect(company.reservation_slot_still_available?(DateTime.new(2120,4,17,9,0))).to eql(false)
+      expect(company.time_slot_still_available?(DateTime.new(2120,4,17,9,0))).to eql(false)
     end
 
     it 'returns true if one spot is still available' do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567891'
 
-      expect(company.reservation_slot_still_available?(DateTime.new(2120,4,17,9,0))).to eql(true)
+      expect(company.time_slot_still_available?(DateTime.new(2120,4,17,9,0))).to eql(true)
     end
   end
 
   context '#available_time_slots' do
     it 'returns all the time slots between the two dates' do
-      expect(company.available_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
+      expect(company.today_time_slots(DateTime.new(2020,4,17,9,0))).to eql([
         DateTime.new(2020,4,17,9,0).in_time_zone,
         DateTime.new(2020,4,17,9,15).in_time_zone,
         DateTime.new(2020,4,17,9,30).in_time_zone,
@@ -270,11 +270,11 @@ RSpec.describe Company, type: :model do
     end
   end
 
-  context '#next_available_time_slots' do
+  context '#available_time_slots_after_given_date' do
     it 'returns all available time slots' do
       company.customers_per_unit_of_time = 1
 
-      expect(company.next_available_time_slots(DateTime.new(2120,4,17,9,0))).to eql([
+      expect(company.available_time_slots_after_given_date(DateTime.new(2120,4,17,9,0))).to eql([
         DateTime.new(2120,4,17,9,0).in_time_zone,
         DateTime.new(2120,4,17,9,15).in_time_zone,
         DateTime.new(2120,4,17,9,30).in_time_zone,
@@ -284,7 +284,7 @@ RSpec.describe Company, type: :model do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,30), phone_number: '1234567891'
 
-      expect(company.next_available_time_slots(DateTime.new(2120,4,17,9,0))).to eql([
+      expect(company.available_time_slots_after_given_date(DateTime.new(2120,4,17,9,0))).to eql([
         DateTime.new(2120,4,17,9,15).in_time_zone,
         DateTime.new(2120,4,17,9,45).in_time_zone
       ])
@@ -292,7 +292,7 @@ RSpec.describe Company, type: :model do
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,15), phone_number: '1234567890'
       create :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,45), phone_number: '1234567891'
 
-      expect(company.next_available_time_slots(DateTime.new(2120,4,17,9,0))).to eql([])
+      expect(company.available_time_slots_after_given_date(DateTime.new(2120,4,17,9,0))).to eql([])
     end
   end
 end

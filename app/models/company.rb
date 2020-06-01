@@ -81,31 +81,51 @@ class Company < ApplicationRecord
     true
   end
 
-  def available_time_slots(reservation_date)
-    start_time, end_time = opening_time, closing_time if reservation_date.weekday?
-    start_time, end_time = opening_time_saturday, closing_time_saturday if reservation_date.saturday?
-    start_time, end_time = opening_time_sunday, closing_time_sunday if reservation_date.sunday?
+  def opening_closing_time_for_given_date(reservation_date)
+    return [opening_time_sunday, closing_time_sunday] if reservation_date.sunday?
+    return [opening_time_saturday, closing_time_saturday] if reservation_date.saturday?
 
-    start_time = start_time.change( { day: reservation_date.day, month: reservation_date.month, year: reservation_date.year })
-    end_time = end_time.change( { day: reservation_date.day, month: reservation_date.month, year: reservation_date.year })
-
-    Enumerator.new { |y| loop { y.yield start_time; start_time += unit_of_time.minutes } }.take_while { |d| d + unit_of_time.minutes <= end_time }
+    [opening_time, closing_time]
   end
 
-  def next_available_time_slots(reservation_date)
-    all_available_time_slots = available_time_slots(reservation_date).select{ |available_time_slot| available_time_slot >= reservation_date }
-    all_available_time_slots.reject!{ |available_time_slot| !reservation_slot_still_available?(available_time_slot) }
-    all_available_time_slots
+  def sync_day_month_year(date, reference_date)
+    date.change({
+      day: reference_date.day,
+      month: reference_date.month,
+      year: reference_date.year
+    })
   end
 
-  def next_available_time_slots_to_string(reservation_date, first_n_available_time_slots)
-    next_available_time_slots(reservation_date).first(first_n_available_time_slots).map{ |available_time_slot| hour_min_am_pm(available_time_slot) }.join(', ')
+  def today_time_slots(reservation_date)
+    start_time, end_time = opening_closing_time_for_given_date(reservation_date).map{
+      |date| sync_day_month_year(date, reservation_date)
+    }
+
+    Enumerator.new {
+      |y| loop {
+        y.yield start_time; start_time += unit_of_time.minutes
+      }
+    }.take_while {
+      |d| d + unit_of_time.minutes <= end_time
+    }
   end
 
-  def reservation_slot_still_available?(reservation_date)
+  def available_time_slots_after_given_date(reservation_date)
+    today_time_slots(reservation_date).select { |available_time_slot|
+      available_time_slot >= reservation_date &&
+      time_slot_still_available?(available_time_slot)
+    }
+  end
+
+  def available_time_slots_after_given_date_to_string(reservation_date, n)
+    available_time_slots_after_given_date(reservation_date).first(n).map{ |available_time_slot|
+      hour_min_am_pm(available_time_slot)
+    }.join(', ')
+  end
+
+  def time_slot_still_available?(reservation_date)
     return false unless open?(reservation_date)
 
-    available_time_slots(reservation_date).include?(reservation_date) &&
     reservations.where(reservation_date: reservation_date).count < customers_per_unit_of_time
   end
 

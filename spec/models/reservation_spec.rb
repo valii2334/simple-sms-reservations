@@ -51,7 +51,7 @@ RSpec.describe Reservation, type: :model do
       reservation1 = build :reservation, company: company, reservation_date: DateTime.new(2120,4,17,9,0), phone_number: '1234567890'
 
       expect(reservation1).to_not be_valid
-      expect(reservation1.errors.full_messages.join('')).to eql(I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.next_available_time_slots_to_string(DateTime.new(2120,4,17,9,0), 3)))
+      expect(reservation1.errors.full_messages.join('')).to eql(I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.available_time_slots_after_given_date_to_string(DateTime.new(2120,4,17,9,0), 3)))
     end
   end
 end

@@ -26,8 +26,8 @@ class Reservation < ApplicationRecord
       return
     end
 
-    unless company.reservation_slot_still_available?(reservation_date)
-      errors.add(:base, I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.next_available_time_slots_to_string(reservation_date, 3)))
+    unless company.time_slot_still_available?(reservation_date)
+      errors.add(:base, I18n.t('reservation.reservation_slot_still_available', company_name: company.name, next_slots: company.available_time_slots_after_given_date_to_string(reservation_date, 3)))
       return
     end
   end

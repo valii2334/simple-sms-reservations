@@ -52,7 +52,7 @@ class CompaniesController < ApplicationController
     @reservations = []
 
     if @company.open_today?(@date)
-      @available_time_slots = @company.available_time_slots(@date)
+      @available_time_slots = @company.today_time_slots(@date)
                                       .group_by{ |date| date.strftime('%H') }
       @reservations = @company.reservations.today_grouped_by_h_m(@date)
     end
