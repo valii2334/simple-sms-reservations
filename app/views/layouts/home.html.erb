@@ -24,7 +24,7 @@
   <meta property='og:image' itemprop='image primaryImageOfPage' content="<%=asset_path('home/appointment.jpg')%>">
 
   <title><%= t 'landing_page.title' %></title>
-  
+
   <!-- Custom fonts for this template -->
   <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
 </head>
@@ -32,10 +32,23 @@
 <body>
 
   <!-- Navigation -->
-  <nav class="navbar navbar-light bg-light static-top">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <a class="navbar-brand" href="#"><%= t 'landing_page.title' %></a>
-      <a class="btn btn-primary" href="<%= new_user_session_path %>"><%= t 'landing_page.sign_in' %></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="<%= new_user_session_path %>"><%= t 'landing_page.sign_in' %></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="<%= new_user_registration_path %>"><%= t 'landing_page.create_account' %></a>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
 

@@ -19,6 +19,7 @@ en:
     title: "Simple SMS Reservations"
     sign_in: "Sign In"
     sign_up: "Get Started"
+    create_account: "Sign Up"
     short_description: "Easiest SMS reservation system for your business!"
     feature_1_title_short: "Start in 5 minutes"
     feature_1_title: "No more than 5 minutes before you can start accepting SMS reservations"
