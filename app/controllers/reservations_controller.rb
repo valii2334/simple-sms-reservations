@@ -19,7 +19,7 @@ class ReservationsController < ApplicationController
 
     if @reservation.destroy
       client.messages.create(
-        from: @reservation.company.name,
+        from: ENV['TWILIO_NUMBER'],
         to: @reservation.phone_number,
         body: I18n.t('reservation.canceled',
                      company_name: @reservation.company.name,
