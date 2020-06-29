@@ -12,7 +12,7 @@ It is an example app and a basic template for devise auth in rails 6 with omni g
 
 ### Requirements
 
-- Ruby 2.6
+- Ruby 2.6.3
 - Rails 6
 - Foreman gem
 
